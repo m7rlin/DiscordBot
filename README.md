@@ -1,5 +1,5 @@
 # DiscordBot
-Projekt oparty na serii poradników z mojego kanału YouTube o tworzeniu Discordowego bota.
+Projekt oparty na serii poradników z mojego kanału YouTube o tym jak stworzyć własnego discordowego bota.
 
 ## Spis treści
 
