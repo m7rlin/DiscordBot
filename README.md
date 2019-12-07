@@ -1,8 +1,9 @@
 # DiscordBot
-Projekt oparty na serii poradników z mojego kanału YouTube o tym jak stworzyć własnego discordowego bota.
 
-## Spis treści
+Discord Bot — Clock — YouTube tutorials serie about creating own Discord bot with `discord.js` library.
 
-- Co muszę wiedzieć?
-- Jakie programy potrzebuję?
-- Instalacja
+## Table of contents
+
+- What should I know before starting?
+- What programs do I need?
+- Installation

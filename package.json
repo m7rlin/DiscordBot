@@ -1,0 +1,30 @@
+{
+  "name": "discordbot",
+  "version": "1.0.0",
+  "description": "Discord Bot Clock",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js",
+    "dev:watch": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m7rlin/DiscordBot.git"
+  },
+  "keywords": [
+    "discord",
+    "discord-bot",
+    "discord-js"
+  ],
+  "author": "Marcin Stawowczyk m7rlin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/m7rlin/DiscordBot/issues"
+  },
+  "homepage": "https://github.com/m7rlin/DiscordBot#readme",
+  "dependencies": {
+    "discord.js": "^11.5.1",
+    "nodemon": "^2.0.1"
+  }
+}
