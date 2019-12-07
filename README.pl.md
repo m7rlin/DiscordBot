@@ -20,4 +20,5 @@ module.exports = {
 ```
 
 token — twój token bota (powinnien zawsze być prywatny)
+
 prefix — prefix dla kommend, na które reaguje bot
