@@ -3,13 +3,5 @@
   "semi": false,
   "singleQuote": false,
   "trailingComma": "all",
-  "bracketSpacing": true,
-  "overrides": [
-    {
-      "files": ["store/*/*.js", "store/*.js", "helpers/*.js", "helpers/*/*.js"],
-      "options": {
-        "arrowParens": "avoid"
-      }
-    }
-  ]
+  "bracketSpacing": true
 }
