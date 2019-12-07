@@ -1,9 +1,9 @@
-const Discord = require("discord.js")
+const { Client, RichEmbed } = require("discord.js")
 const chalk = require("chalk")
 
 const { token, prefix } = require("./config/config.js")
 
-const client = new Discord.Client()
+const client = new Client()
 
 const log = console.log
 
@@ -36,7 +36,21 @@ client.on("message", (msg) => {
   if (cmd === "info") {
     const botAuthor = "m7rlin"
     const botVersion = "v1.0"
-    channel.send(`Autorem bota jest **${botAuthor}**! Wersjsa *${botVersion}*.`)
+    const botName = "MagicTM — Clock"
+    const botDescription =
+      "Bot, który dodaje możliwość zegara oraz statystyk serwera."
+
+    const embed = new RichEmbed()
+      // Set the title of the field
+      .setTitle(botName)
+      // Set the color of the embed
+      .setColor(0xb348ff)
+      // Set the main content of the embed
+      .setDescription(botDescription)
+      .addField("Autor", botAuthor, true)
+      .addField("Wersja", botVersion, true)
+
+    channel.send(embed)
   }
 })
 
