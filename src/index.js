@@ -55,3 +55,8 @@ client.on("message", (msg) => {
 })
 
 client.login(token)
+
+// Error handler - omit crashed
+client.on("debug", () => {})
+client.on("warn", () => {})
+client.on("error", () => {})
