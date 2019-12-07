@@ -14,7 +14,7 @@ Projekt oparty na serii poradników z mojego kanału YouTube o tym jak stworzyć
 Stwórz albo edyuj plik `src/config/config.js`.
 ```
 module.exports = {
-  token: "___YOUR_TOKEN_HERE___",
+  token: "___WKLEJ_TUTAJ_SWOJ_TOKEN___",
   prefix: "!",
 }
 ```
