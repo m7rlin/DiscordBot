@@ -1,7 +1,7 @@
 const Discord = require("discord.js")
 const chalk = require("chalk")
 
-const config = require("./config/config.js")
+const { token, prefix } = require("./config/config.js")
 
 const client = new Discord.Client()
 
@@ -12,16 +12,33 @@ client.on("ready", () => {
 })
 
 client.on("message", (msg) => {
-  const { author } = msg
+  const { author, guild } = msg
 
   // Check if user is a bot
-  if (author.bot) {
+  if (author.bot || !guild) {
     return
   }
 
-  if (msg.content === "!ping") {
+  // Ignore messages without prefix
+  if (!msg.content.startsWith(prefix)) return
+
+  const args = msg.content
+    .slice(prefix.length)
+    .trim()
+    .split(/ +/g)
+
+  const cmd = args.shift().toLowerCase()
+
+  if (cmd === "ping") {
     msg.reply("Pong!")
+  }
+
+  if (cmd === "info") {
+    const botAuthor = "m7rlin"
+    const botVersion = "v1.0"
+
+    channel.send(`Autorem bota jest **${botAuthor}**! Werjsa *${botVersion}*.`)
   }
 })
 
-client.login(config.token)
+client.login(token)
