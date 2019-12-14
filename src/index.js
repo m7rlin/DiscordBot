@@ -16,6 +16,7 @@ client.on("ready", () => {
   log(chalk.green(`Zalogowano jako ${client.user.tag}!`))
 })
 
+// Connect with Discord
 client.login(token)
 
 // Error handler - omit crashed
