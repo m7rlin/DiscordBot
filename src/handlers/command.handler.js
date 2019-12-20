@@ -11,6 +11,8 @@ const table = new ascii().setHeading("Command", "Load status")
 module.exports = (client) => {
   // Collections
   client.commands = new Collection()
+  // Cooldowns Collection
+  const cooldowns = new Collection()
 
   const commandFiles = readdirSync(__dirname + "/../commands").filter((file) =>
     file.endsWith(".command.js"),
@@ -34,7 +36,7 @@ module.exports = (client) => {
     const { author, guild } = msg
 
     // Check if user is a bot
-    if (author.bot || !guild) {
+    if (author.bot) {
       return
     }
 
@@ -46,13 +48,59 @@ module.exports = (client) => {
       .trim()
       .split(/ +/g)
 
-    const cmd = args.shift().toLowerCase()
+    const cmdName = args.shift().toLowerCase()
+
+    const cmd =
+      client.commands.get(cmdName) ||
+      client.commands.find(
+        (cmd) => cmd.aliases && cmd.aliases.includes(cmdName),
+      )
 
     // Check if commands exist
-    if (!client.commands.has(cmd)) return
+    if (!cmd) return
+
+    // Check if command only allowed in guild
+    if (cmd.guildOnly && !guild) {
+      return msg.reply("I can't execute that command inside DMs!")
+    }
+
+    if (cmd.args && !args.length) {
+      let reply = `You didn't provide any arguments, ${msg.author}!`
+
+      if (cmd.usage) {
+        reply += `\nThe proper usage would be: \`${prefix}${cmd.name} ${cmd.usage}\``
+      }
+
+      return msg.channel.send(reply)
+    }
+
+    // Check cooldowns
+    if (!cooldowns.has(cmdName)) {
+      cooldowns.set(cmdName, new Collection())
+    }
+
+    const now = Date.now()
+    const timestamps = cooldowns.get(cmdName)
+    const cooldownAmount = (cmd.cooldown || 3) * 1000
+
+    if (timestamps.has(msg.author.id)) {
+      const expirationTime = timestamps.get(msg.author.id) + cooldownAmount
+
+      if (now < expirationTime) {
+        const timeLeft = (expirationTime - now) / 1000
+        return msg.reply(
+          `please wait ${timeLeft.toFixed(
+            1,
+          )} more second(s) before reusing the \`${cmdName}\` command.`,
+        )
+      }
+    }
+
+    timestamps.set(msg.author.id, now)
+    setTimeout(() => timestamps.delete(msg.author.id), cooldownAmount)
 
     try {
-      client.commands.get(cmd).run(msg, args)
+      cmd.run(msg, args)
     } catch (error) {
       console.error(error)
       msg.reply("there was an error trying to execute that command!")

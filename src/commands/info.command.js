@@ -3,6 +3,7 @@ const { RichEmbed } = require("discord.js")
 module.exports = {
   name: "info",
   description: "Display bot info.",
+  aliases: ["botinfo"],
 
   run(msg, args) {
     const { channel } = msg
