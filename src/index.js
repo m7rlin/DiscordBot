@@ -6,25 +6,52 @@ const { token } = require("./config/config.js")
 const client = new Client()
 
 const commandHandler = require("./handlers/command.handler")
+const settingsHandler = require("./handlers/settings.handler")
 
 const log = console.log
 
 // Initialize Comamnd Manager
 commandHandler(client)
-
-const channelId = "659834300665036831"
+// Initialize Settings Manager
+settingsHandler(client)
 
 client.on("ready", () => {
   log(chalk.green(`Zalogowano jako ${client.user.tag}!`))
 
-  const guild = client.guilds.get("358614500758257665")
+  // Initialize interval for each guild
+  client.settings.forEach((config, guildId) => {
+    const { guilds } = client
+    // Check if guild exist
+    if (guilds.has(guildId)) {
+      const guild = guilds.get(guildId)
+      // Check if available
+      if (guild.available) {
+        // console.log("available")
 
-  setInterval(() => {
-    const time = new Date().toLocaleTimeString()
-    const channelName = `🕥 ${time}`
+        // Set Interval for each channel
+        const clockChannels = config.clocks
+        setInterval(() => {
+          const time = new Date().toLocaleTimeString().slice(0, 5)
+          const channelName = `🕥 ${time}`
 
-    guild.channels.get(channelId).setName(channelName)
-  }, 3000)
+          clockChannels.forEach((channelId, index) => {
+            // Check if channel exists
+            if (guild.channels.has(channelId)) {
+              // log("channel exist")
+              const channelToUpdate = guild.channels.get(channelId)
+              channelToUpdate.setName(channelName)
+            } else {
+              // log("not exist")
+              // Remove Id from config
+              // that does not exist
+              clockChannels.splice(index, 1)
+              client.saveConfig(guildId)
+            }
+          })
+        }, 60 * 1000)
+      }
+    }
+  })
 })
 
 // Connect with Discord

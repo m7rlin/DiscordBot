@@ -6,7 +6,7 @@ module.exports = {
   usage: "<action>[add]",
 
   async run(msg, args) {
-    const { channel, guild } = msg
+    const { channel, guild, client } = msg
 
     // const time = new Date().toLocaleTimeString().slice(0, 5)
     const time = new Date().toLocaleTimeString()
@@ -19,7 +19,13 @@ module.exports = {
     if (createdChannel) {
       const channelId = createdChannel.id
 
+      const { settings } = client
       // Save channel id to config
+      if (!settings.get(guild.id)) {
+        settings.set(guild.id, { clocks: [] })
+      }
+      client.settings.get(guild.id).clocks.push(channelId)
+      client.saveConfig(guild.id)
     }
   },
 }
