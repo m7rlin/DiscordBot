@@ -12,8 +12,19 @@ const log = console.log
 // Initialize Comamnd Manager
 commandHandler(client)
 
+const channelId = "659834300665036831"
+
 client.on("ready", () => {
   log(chalk.green(`Zalogowano jako ${client.user.tag}!`))
+
+  const guild = client.guilds.get("358614500758257665")
+
+  setInterval(() => {
+    const time = new Date().toLocaleTimeString()
+    const channelName = `🕥 ${time}`
+
+    guild.channels.get(channelId).setName(channelName)
+  }, 3000)
 })
 
 // Connect with Discord
