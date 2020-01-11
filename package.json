@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node src/index.js",
     "dev:watch": "nodemon src/index.js",
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
