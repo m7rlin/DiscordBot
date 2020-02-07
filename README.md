@@ -23,3 +23,4 @@ module.exports = {
 token — your bot token (should always be private)
 
 prefix — your bot command prefix
+"# discord-bot-clock" 
