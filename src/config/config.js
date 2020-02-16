@@ -1,4 +1,6 @@
+const dotenv = require("dotenv").config()
+
 module.exports = {
-  token: "___YOUR_TOKEN_HERE___",
+  token: process.env.TOKEN,
   prefix: "!",
 }
