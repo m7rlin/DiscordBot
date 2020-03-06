@@ -1,12 +1,14 @@
 const { readdirSync } = require("fs")
 
-const { prefix } = require(__dirname + "/../config/config.js")
+const { prefix, owner } = require(__dirname + "/../config/config.js")
 
 const { Collection } = require("discord.js")
 
 const ascii = require("ascii-table")
 
 const table = new ascii().setHeading("Command", "Load status")
+
+const handleSchematic = require("./schematic.handler")
 
 module.exports = (client) => {
   // Collections
@@ -32,12 +34,27 @@ module.exports = (client) => {
 
   console.log(table.toString())
 
+  client.on("messageUpdate", (oldMessage, newMessage) => {
+    const { author } = newMessage
+    // Handle schematic channel
+    // Ignore bot owner
+    if (newMessage.channel.id === "678477568869138432" && author.id !== owner) {
+      return handleSchematic(newMessage)
+    }
+  })
+
   client.on("message", (msg) => {
     const { author, guild } = msg
 
     // Check if user is a bot
     if (author.bot) {
       return
+    }
+
+    // Handle schematic channel
+    // Ignore bot owner
+    if (msg.channel.id === "678477568869138432" && author.id !== owner) {
+      return handleSchematic(msg)
     }
 
     // Ignore messages without prefix
