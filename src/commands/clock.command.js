@@ -6,6 +6,7 @@ module.exports = {
   usage: "<action>[add]",
 
   async run(msg, args) {
+    return
     const { channel, guild, client } = msg
 
     // const time = new Date().toLocaleTimeString().slice(0, 5)

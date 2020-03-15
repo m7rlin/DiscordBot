@@ -10,9 +10,9 @@ module.exports = {
 
     const botAuthor = "m7rlin"
     const botVersion = "v1.0"
-    const botName = "MagicTM — Clock"
+    const botName = "MagicTM — Korona"
     const botDescription =
-      "Bot, który dodaje możliwość zegara oraz statystyk serwera."
+      "Bot, który dodaje możliwość wyswietlania statystyk korona wirus."
 
     const embed = new RichEmbed()
       // Set the title of the field

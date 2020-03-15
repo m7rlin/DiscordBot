@@ -5,6 +5,7 @@ module.exports = {
   usage: "<amount>",
 
   run(msg, args) {
+    return
     const { channel } = msg
     const amountArg = parseInt(args[0])
 
