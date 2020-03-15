@@ -12,7 +12,7 @@ module.exports = {
     const botVersion = "v1.0"
     const botName = "MagicTM — Korona"
     const botDescription =
-      "Bot, który dodaje możliwość wyswietlania statystyk korona wirus."
+      "Bot, który dodaje możliwość wyswietlania statystyk korona wirus oraz zegara serwera."
 
     const embed = new RichEmbed()
       // Set the title of the field
