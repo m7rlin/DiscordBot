@@ -25,8 +25,8 @@ client.on("ready", () => {
   client.settings.forEach((config, guildId) => {
     const { guilds } = client
     // Check if guild exist
-    if (guilds.has(guildId)) {
-      const guild = guilds.get(guildId)
+    if (guilds.cache.has(guildId)) {
+      const guild = guilds.cache.get(guildId)
       // Check if available
       if (guild.available) {
         // console.log("available")
@@ -39,9 +39,9 @@ client.on("ready", () => {
 
           clockChannels.forEach((channelId, index) => {
             // Check if channel exists
-            if (guild.channels.has(channelId)) {
+            if (guild.channels.cache.has(channelId)) {
               // log("channel exist")
-              const channelToUpdate = guild.channels.get(channelId)
+              const channelToUpdate = guild.channels.cache.get(channelId)
               channelToUpdate.setName(channelName)
             } else {
               // log("not exist")

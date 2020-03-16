@@ -6,6 +6,7 @@ module.exports = {
 
   run(msg, args) {
     const { channel } = msg
+
     const amountArg = parseInt(args[0])
 
     if (!Number.isInteger(amountArg)) {

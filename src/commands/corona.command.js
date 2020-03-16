@@ -1,4 +1,4 @@
-const { RichEmbed } = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 const { ucfirst } = require("js-helpers")
 
 module.exports = {
@@ -21,7 +21,7 @@ module.exports = {
     const title = "Korona wirus"
 
     // Create RichEmbed
-    const embed = new RichEmbed()
+    const embed = new MessageEmbed()
       // Set the title of the field
       .setTitle(title)
       // Set the color of the embed
