@@ -1,4 +1,4 @@
-const { RichEmbed } = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
   name: "info",
@@ -14,7 +14,7 @@ module.exports = {
     const botDescription =
       "Bot, który dodaje możliwość wyswietlania statystyk korona wirus oraz zegara serwera."
 
-    const embed = new RichEmbed()
+    const embed = new MessageEmbed()
       // Set the title of the field
       .setTitle(botName)
       // Set the color of the embed
