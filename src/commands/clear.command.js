@@ -7,19 +7,13 @@ module.exports = {
   description: "Clear number of messages in specific channel.",
   args: true,
   usage: "<amount>",
-  botPermissions: [],
-  userPermissions: [],
+  botPermissions: [FLAGS.MANAGE_MESSAGES],
+  userPermissions: [FLAGS.ADMINISTRATOR],
 
   run(msg, args) {
     const { channel, guild, member } = msg
 
     const amountArg = parseInt(args[0])
-
-    console.log("bot", guild.me.permissions.has([FLAGS.ADMINISTRATOR]))
-    console.log("user", member.permissions.has([FLAGS.MANAGE_MESSAGES]))
-
-    if (!member.permissions.has([FLAGS.MANAGE_MESSAGES]))
-      return msg.reply("you need more permissions to execute this command!")
 
     if (!Number.isInteger(amountArg)) {
       return channel.send("You must specify the amount of messages to clear!")
