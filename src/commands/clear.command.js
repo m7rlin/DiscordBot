@@ -8,7 +8,7 @@ module.exports = {
   args: true,
   usage: "<amount>",
   botPermissions: [FLAGS.MANAGE_MESSAGES],
-  userPermissions: [FLAGS.ADMINISTRATOR],
+  userPermissions: [FLAGS.MANAGE_MESSAGES],
 
   run(msg, args) {
     const { channel, guild, member } = msg
