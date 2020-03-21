@@ -1,11 +1,17 @@
+const {
+  Permissions: { FLAGS },
+} = require("discord.js")
+
 module.exports = {
   name: "clear",
   description: "Clear number of messages in specific channel.",
   args: true,
   usage: "<amount>",
+  botPermissions: [FLAGS.MANAGE_MESSAGES],
+  userPermissions: [FLAGS.ADMINISTRATOR],
 
   run(msg, args) {
-    const { channel } = msg
+    const { channel, guild, member } = msg
 
     const amountArg = parseInt(args[0])
 

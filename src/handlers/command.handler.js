@@ -33,7 +33,7 @@ module.exports = (client) => {
   console.log(table.toString())
 
   client.on("message", (msg) => {
-    const { author, guild } = msg
+    const { author, guild, channel } = msg
 
     // Check if user is a bot
     if (author.bot) {
@@ -62,6 +62,29 @@ module.exports = (client) => {
     // Check if command only allowed in guild
     if (cmd.guildOnly && !guild) {
       return msg.reply("I can't execute that command inside DMs!")
+    }
+
+    // =================================
+    //
+    // Check permissions
+    //
+    // =================================
+    // Check bot permissions
+    if (cmd.botPermissions && cmd.botPermissions.length) {
+      if (!guild.me.permissionsIn(channel).has(cmd.botPermissions)) {
+        return channel.send(
+          `I need more permissions to execute this command here. Missing permissions: \`${cmd.botPermissions.join(
+            "`,`",
+          )}\``,
+        )
+      }
+    }
+
+    // Check user permissions
+    if (cmd.userPermissions && cmd.userPermissions.length) {
+      if (!msg.member.permissionsIn(channel).has(cmd.userPermissions)) {
+        return msg.reply("you have missing permissions.")
+      }
     }
 
     if (cmd.args && !args.length) {
