@@ -13,7 +13,6 @@ module.exports = {
   run(msg, args) {
     const { channel, guild, mentions, author } = msg
 
-    const userArg = args[0]
     const reasonArg = [...args].slice(1).join(" ")
 
     const userToKick = mentions.users.first()
