@@ -1,4 +1,5 @@
 # DiscordBot
+
 Projekt oparty na serii poradników z mojego kanału YouTube o tym jak stworzyć własnego discordowego bota.
 
 ## Spis treści
@@ -13,7 +14,7 @@ Powinieneś znać podstawy javascript. Podczas tworzenia bota używam z nowoczes
 
 ## Jakie programy potrzebuję?
 
-- Edytor tekstu albo IDE — Sublime Text 3, Visual Studio Code *(tego używam)*
+- Edytor tekstu albo IDE — Sublime Text 3, Visual Studio Code _(tego używam)_
 - Zainstalowany serwer Node JS
 
 ## Instalacja
@@ -42,7 +43,7 @@ module.exports = {
 
 2. Strwórz plik `.env` i ustaw zmienne środowiskowe.
 
-```
+```yaml
 TOKEN=___TWOJ_TOKEN_TUTAJ___
 ```
 

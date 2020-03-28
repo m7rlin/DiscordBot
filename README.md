@@ -14,14 +14,14 @@ You should know javascript fundamentals. I'm using modern javascript specificati
 
 ## What programs do I need?
 
-- Text editor or IDE — Sublime Text 3, Visual Studio Code *(i'm using it)*
+- Text editor or IDE — Sublime Text 3, Visual Studio Code _(i'm using it)_
 - Node JS server installed
 
 ## Installation
 
 > More informations you can find on my youtube series. https://www.youtube.com/m7rlin
 
-Download or clone repository. 
+Download or clone repository.
 
 Install packages.
 
@@ -30,6 +30,7 @@ Install packages.
 ## Usage
 
 1. Customize `src/config/config.js` file to fit your needs.
+
 ```javascript
 ...
 module.exports = {
@@ -42,7 +43,7 @@ module.exports = {
 
 2. Create `.env` file and set environment variables.
 
-```
+```yaml
 TOKEN=___YOUR_TOKEN_HERE___
 ```
 
