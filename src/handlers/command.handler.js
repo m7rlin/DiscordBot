@@ -35,6 +35,22 @@ module.exports = (client) => {
   client.on("message", (msg) => {
     const { author, guild, channel } = msg
 
+    if (msg.content === "xd") {
+      return msg.react("😎")
+    }
+
+    if (msg.content === "love") {
+      msg.react("😍")
+      msg.react("❤")
+      msg.react("💘")
+      return
+    }
+
+    if (msg.content === "lol") {
+      msg.react("693443924034846720")
+      return
+    }
+
     // Check if user is a bot
     if (author.bot) {
       return
