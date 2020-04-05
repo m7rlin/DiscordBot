@@ -3,7 +3,7 @@ const chalk = require("chalk")
 
 const { token } = require("./config/config.js")
 
-const client = new Client()
+const client = new Client({ partials: ["MESSAGE", "REACTION"] })
 
 const commandHandler = require("./handlers/command.handler")
 const settingsHandler = require("./handlers/settings.handler")
@@ -55,6 +55,14 @@ client.on("ready", () => {
       }
     }
   })
+})
+
+client.on("messageReactionAdd", async (reaction, user) => {
+  if (message.partial) {
+    console.log("The message is partial.")
+  } else {
+    console.log("The message is not partial.")
+  }
 })
 
 // Connect with Discord
