@@ -35,22 +35,6 @@ module.exports = (client) => {
   client.on("message", (msg) => {
     const { author, guild, channel } = msg
 
-    if (msg.content === "xd") {
-      return msg.react("😎")
-    }
-
-    if (msg.content === "love") {
-      msg.react("😍")
-      msg.react("❤")
-      msg.react("💘")
-      return
-    }
-
-    if (msg.content === "lol") {
-      msg.react("693443924034846720")
-      return
-    }
-
     // Check if user is a bot
     if (author.bot) {
       return
@@ -59,10 +43,7 @@ module.exports = (client) => {
     // Ignore messages without prefix
     if (!msg.content.startsWith(prefix)) return
 
-    const args = msg.content
-      .slice(prefix.length)
-      .trim()
-      .split(/ +/g)
+    const args = msg.content.slice(prefix.length).trim().split(/ +/g)
 
     const cmdName = args.shift().toLowerCase()
 
