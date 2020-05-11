@@ -1,7 +1,7 @@
 {
   "name": "discordbot",
-  "version": "1.0.0",
-  "description": "Discord Bot Clock",
+  "version": "1.21.0",
+  "description": "Discord Bot Tutorials",
   "main": "src/index.js",
   "scripts": {
     "dev": "node src/index.js",
@@ -28,7 +28,7 @@
     "ascii-table": "0.0.9",
     "axios": "^0.19.2",
     "chalk": "^3.0.0",
-    "discord.js": "^12.1.1",
+    "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "js-helpers": "github:m7rlin/js-helpers",
     "js-yaml": "^3.13.1",
