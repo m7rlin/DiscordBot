@@ -3,7 +3,7 @@ const chalk = require("chalk")
 
 const { token } = require("./config/config.js")
 
-const client = new Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"] })
+const client = new Client({ partials: ["MESSAGE", "REACTION"] })
 
 const commandHandler = require("./handlers/command.handler")
 const settingsHandler = require("./handlers/settings.handler")
@@ -21,6 +21,8 @@ apiHandler(client)
 const guildRoles = {
   VERIFIED: "709381587791380482",
 }
+
+const rulesMessageId = "709543702049063044"
 
 client.on("ready", () => {
   log(chalk.green(`Zalogowano jako ${client.user.tag}!`))
@@ -62,16 +64,11 @@ client.on("ready", () => {
 })
 
 client.on("messageReactionAdd", async (reaction, user) => {
-  console.log(
-    "dodano reakcje!!!",
-    reaction.emoji.id,
-    reaction.emoji.name,
-    reaction.partial,
-    reaction,
-  )
+  if (reaction.partial) await reaction.fetch()
+
   const { message } = reaction
 
-  if (message.id === "709381508091346975") {
+  if (message.id === rulesMessageId) {
     const member = message.channel.guild.members.cache.get(user.id)
 
     // React only for specific emoji
@@ -80,25 +77,14 @@ client.on("messageReactionAdd", async (reaction, user) => {
       member.roles.add(guildRoles.VERIFIED)
     }
   }
-  // if (message.partial) {
-  //   console.log("The message is partial.")
-  //   message
-  //     .fetch()
-  //     .then((fullmessage) => {
-  //       console.log(fullmessage.content)
-  //     })
-  //     .catch((error) => {
-  //       console.log("Something went wrong when fetching the message: ", error)
-  //     })
-  // } else {
-  //   console.log("The message is not partial.")
-  // }
 })
 
 client.on("messageReactionRemove", async (reaction, user) => {
+  if (reaction.partial) await reaction.fetch()
+
   const { message } = reaction
 
-  if (message.id === "709381508091346975") {
+  if (message.id === rulesMessageId) {
     const member = message.channel.guild.members.cache.get(user.id)
 
     // React only for specific emoji
