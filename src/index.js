@@ -8,15 +8,18 @@ const client = new Client()
 const commandHandler = require("./handlers/command.handler")
 const settingsHandler = require("./handlers/settings.handler")
 const apiHandler = require("./handlers/api.handler")
+const eventHandler = require("./handlers/event.handler")
 
 const log = console.log
 
-// Initialize Comamnd Manager
+// Initialize Comamnd Handler
 commandHandler(client)
-// Initialize Settings Manager
+// Initialize Settings Handler
 settingsHandler(client)
-// Initialize API Manager
+// Initialize API Handler
 apiHandler(client)
+// Initialize Event Handler
+eventHandler(client)
 
 client.on("ready", () => {
   log(chalk.green(`Zalogowano jako ${client.user.tag}!`))
