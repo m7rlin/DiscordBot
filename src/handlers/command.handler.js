@@ -99,7 +99,7 @@ module.exports = (client) => {
       let reply = `You didn't provide any arguments, ${msg.author}!`
 
       if (cmd.usage) {
-        reply += `\nThe proper usage would be: \`${prefix}${cmd.name} ${cmd.usage}\``
+        reply += `\nThe proper usage would be: \`${PREFIX}${cmd.name} ${cmd.usage}\``
       }
 
       return msg.channel.send(reply)
