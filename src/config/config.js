@@ -1,7 +1,8 @@
 const dotenv = require("dotenv").config()
 
 module.exports = {
-  token: process.env.token,
-  prefix: "!",
-  corona_api: "https://corona.lmao.ninja",
+  TOKEN: process.env.token,
+  PREFIX: process.env.prefix,
+  OWNER: process.env.owner,
+  CORONA_API: "https://corona.lmao.ninja/v2",
 }

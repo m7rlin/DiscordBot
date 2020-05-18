@@ -1,10 +1,10 @@
 const axios = require("axios")
 
-const { corona_api } = require(__dirname + "/../config/config.js")
+const { CORONA_API } = require(__dirname + "/../config/config.js")
 
 module.exports = (client) => {
   const instance = axios.create({
-    baseURL: corona_api,
+    baseURL: CORONA_API,
   })
 
   client.axios = instance

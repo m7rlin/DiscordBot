@@ -1,7 +1,7 @@
 const { Client } = require("discord.js")
 const chalk = require("chalk")
 
-const { token } = require("./config/config.js")
+const { TOKEN } = require("./config/config.js")
 
 const client = new Client()
 
@@ -61,7 +61,7 @@ client.on("ready", () => {
 })
 
 // Connect with Discord
-client.login(token)
+client.login(TOKEN)
 
 // Error handler - omit crashed
 client.on("debug", () => {})

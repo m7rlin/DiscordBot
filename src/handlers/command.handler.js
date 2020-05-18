@@ -1,6 +1,6 @@
 const { readdirSync } = require("fs")
 
-const { prefix } = require(__dirname + "/../config/config.js")
+const { PREFIX, OWNER } = require(__dirname + "/../config/config.js")
 
 const { Collection } = require("discord.js")
 
@@ -41,12 +41,9 @@ module.exports = (client) => {
     }
 
     // Ignore messages without prefix
-    if (!msg.content.startsWith(prefix)) return
+    if (!msg.content.startsWith(PREFIX)) return
 
-    const args = msg.content
-      .slice(prefix.length)
-      .trim()
-      .split(/ +/g)
+    const args = msg.content.slice(PREFIX.length).trim().split(/ +/g)
 
     const cmdName = args.shift().toLowerCase()
 
@@ -62,6 +59,17 @@ module.exports = (client) => {
     // Check if command only allowed in guild
     if (cmd.guildOnly && !guild) {
       return msg.reply("I can't execute that command inside DMs!")
+    }
+
+    // =================================
+    //
+    // Check owner only
+    //
+    // =================================
+    if (cmd.ownerOnly) {
+      if (author.id !== OWNER) {
+        return msg.reply("only the bot owner can execute this command.")
+      }
     }
 
     // =================================
