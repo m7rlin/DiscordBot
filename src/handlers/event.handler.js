@@ -1,4 +1,4 @@
-const { readdirSync } = require("fs")
+const { readdirSync, existsSync, mkdirSync } = require("fs")
 const chalk = require("chalk")
 
 const {
@@ -8,12 +8,29 @@ const {
 const serverEvents = Object.values(Events)
 
 // Load server events
-const serverEventsPath = "/events"
+const serverEventsPath = __dirname + `/../events`
 
 module.exports = (client) => {
-  const events = readdirSync(
-    __dirname + `/..${serverEventsPath}`,
-  ).filter((file) => file.endsWith(".js"))
+  // Check if directory exists
+  try {
+    if (!existsSync(serverEventsPath)) {
+      // Directory does not exist.
+      // Create new one
+      console.log(
+        chalk.yellow(
+          "Directory 'events' does not exist. Creating directory 'events'...",
+        ),
+      )
+      mkdirSync(serverEventsPath)
+    }
+  } catch (e) {
+    console.log("An error occurred. " + e)
+    process.exit(1)
+  }
+
+  const events = readdirSync(serverEventsPath).filter((file) =>
+    file.endsWith(".js"),
+  )
 
   let registeredEventsCount = 0
 
