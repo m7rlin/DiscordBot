@@ -13,7 +13,7 @@ module.exports = {
     const botName = "MagicTM — Korona"
     const botDescription =
       "Bot, który dodaje możliwość wyswietlania statystyk korona wirus oraz zegara serwera."
-
+      // Set embed
     const embed = new MessageEmbed()
       // Set the title of the field
       .setTitle(botName)
@@ -24,6 +24,6 @@ module.exports = {
       .addField("Autor", botAuthor, true)
       .addField("Wersja", botVersion, true)
 
-    channel.send(embed)
+    message.channel.send(embed)
   },
 }
