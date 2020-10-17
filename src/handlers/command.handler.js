@@ -40,10 +40,26 @@ module.exports = (client) => {
       return
     }
 
-    // Ignore messages without prefix
-    if (!msg.content.startsWith(PREFIX)) return
+    const { settings } = client
 
-    const args = msg.content.slice(PREFIX.length).trim().split(/ +/g)
+    // Save channel id to config
+    if (!settings.get(guild.id)) {
+      settings.set(guild.id, {
+        clocks: [],
+        prefix: null,
+      })
+    }
+
+    // Load guild prefix from config
+    const guildPrefix = settings.get(guild.id).prefix
+
+    // Load prefix
+    let prefix = guildPrefix ? guildPrefix : PREFIX
+
+    // Ignore messages without prefix
+    if (!msg.content.startsWith(prefix)) return
+
+    const args = msg.content.slice(prefix.length).trim().split(/ +/g)
 
     const cmdName = args.shift().toLowerCase()
 
