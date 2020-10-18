@@ -17,7 +17,7 @@ module.exports = {
       .setTitle("Nowy użytkownik")
 
       .setColor(0x00ff04)
-      .setDescription(`[<@${member.user.id}>](${member.displayName}) dołączył(-a) do serwera.`)
+      .setDescription(`<@${member.user.id}> dołączył(-a) do serwera.`)
 
     logChannel.send(embed)
   }  
