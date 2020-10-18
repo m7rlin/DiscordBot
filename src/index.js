@@ -24,6 +24,12 @@ eventHandler(client)
 client.on("ready", () => {
   log(chalk.green(`Zalogowano jako ${client.user.tag}!`))
 
+  // ========== TEST
+  // User joined guild
+  // client.emit("guildMemberAdd", client.guilds.cache.get("358614500758257665").members.cache.get("257954238339088384"))
+  // User left guild
+  // client.emit("guildMemberRemove", client.guilds.cache.get("358614500758257665").members.cache.get("257954238339088384"))
+
   // Initialize interval for each guild
   client.settings.forEach((config, guildId) => {
     const { guilds } = client
