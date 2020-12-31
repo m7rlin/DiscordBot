@@ -42,16 +42,18 @@ module.exports = (client) => {
 
     const { settings } = client
 
+    const guildId = guild?.id
+
     // Save channel id to config
-    if (!settings.get(guild.id)) {
-      settings.set(guild.id, {
+    if (!settings.get(guildId)) {
+      settings.set(guildId, {
         clocks: [],
         prefix: null,
       })
     }
 
     // Load guild prefix from config
-    const guildPrefix = settings.get(guild.id).prefix
+    const guildPrefix = settings.get(guildId)?.prefix
 
     // Load prefix
     let prefix = guildPrefix ? guildPrefix : PREFIX
