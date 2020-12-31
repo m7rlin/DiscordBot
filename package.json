@@ -1,6 +1,6 @@
 {
   "name": "discordbot",
-  "version": "1.26.0",
+  "version": "1.26.2",
   "description": "Discord Bot Clock",
   "main": "src/index.js",
   "scripts": {

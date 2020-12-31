@@ -1,4 +1,4 @@
-const { prefix } = require("../config/config.js")
+const { PREFIX } = require("../config/config.js")
 
 module.exports = {
   name: "help",
@@ -24,7 +24,7 @@ module.exports = {
       data.push("Here's a list of all my commands:")
       data.push(commands.map((command) => command.name).join(", "))
       data.push(
-        `\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`,
+        `\nYou can send \`${PREFIX}help [command name]\` to get info on a specific command!`,
       )
 
       return msg.author
