@@ -1,6 +1,6 @@
 # DiscordBot
 
-Discord Bot — Clock — YouTube tutorials serie about creating own Discord bot with `discord.js` library.
+Discord Bot — Clock — YouTube tutorial series about creating own Discord bot with `discord.js` library.
 
 ## Table of contents
 
