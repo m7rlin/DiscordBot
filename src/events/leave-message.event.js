@@ -14,6 +14,6 @@ module.exports = {
       .setColor(0xff0000)
       .setDescription(`[<@${member.user.id}>](${member.displayName}) opuścił(-a) serwer.`)
 
-    logChannel.send(embed)
+    logChannel.send({ embeds: [embed] })
   }  
 }

@@ -24,6 +24,6 @@ module.exports = {
       .addField("Autor", botAuthor, true)
       .addField("Wersja", botVersion, true)
 
-    channel.send(embed)
+    channel.send({ embeds: [embed] })
   },
 }

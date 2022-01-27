@@ -15,11 +15,11 @@ module.exports = {
 
     // Since the image takes time to load, you should await it
     const background = await Canvas.loadImage(
-      __dirname + "./../assets/img/wallpaper.jpg",
+      __dirname + "/../assets/img/wallpaper.jpg",
     )
 
     const diamond = await Canvas.loadImage(
-      __dirname + "./../assets/img/diamond.png",
+      __dirname + "/../assets/img/diamond.png",
     )
 
     // This uses the canvas dimensions to stretch the image onto the entire canvas
@@ -56,6 +56,6 @@ module.exports = {
       "wallpaper.jpg",
     )
 
-    msg.channel.send("Gratulacje, kolejny poziom!", attachment)
+    msg.channel.send({ content: "Gratulacje, kolejny poziom!", files: [attachment] })
   },
 }

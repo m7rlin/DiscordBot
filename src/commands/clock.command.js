@@ -12,7 +12,7 @@ module.exports = {
     const channelName = `🕥 ${time}`
 
     const createdChannel = await guild.channels.create(channelName, {
-      type: "voice",
+      type: "GUILD_VOICE",
     })
 
     if (createdChannel) {

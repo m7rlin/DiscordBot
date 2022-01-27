@@ -32,7 +32,7 @@ module.exports = (client) => {
 
   console.log(table.toString())
 
-  client.on("message", (msg) => {
+  client.on("messageCreate", (msg) => {
     const { author, guild, channel } = msg
 
     // Check if user is a bot

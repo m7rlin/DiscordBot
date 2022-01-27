@@ -19,6 +19,6 @@ module.exports = {
       .setColor(0x00ff04)
       .setDescription(`<@${member.user.id}> dołączył(-a) do serwera.`)
 
-    logChannel.send(embed)
+    logChannel.send({ embeds: [embed] })
   }  
 }

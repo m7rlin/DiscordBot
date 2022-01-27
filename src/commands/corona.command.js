@@ -50,7 +50,7 @@ module.exports = {
         true,
       )
 
-      return channel.send(embed)
+      return channel.send({ embeds: [embed] })
     }
 
     // Display statistics for specific country if exist
@@ -91,6 +91,6 @@ module.exports = {
       true,
     )
 
-    return channel.send(embed)
+    return channel.send({ embeds: [embed] })
   },
 }
