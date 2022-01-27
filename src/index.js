@@ -1,9 +1,19 @@
-const { Client } = require("discord.js")
+const { Client, Intents } = require("discord.js")
 const chalk = require("chalk")
 
 const { TOKEN } = require("./config/config.js")
 
-const client = new Client()
+const client = new Client({
+  intents: [
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.DIRECT_MESSAGES,
+    Intents.FLAGS.GUILD_MEMBERS,
+  ],
+  partials: [
+    "CHANNEL",
+  ]
+})
 
 const commandHandler = require("./handlers/command.handler")
 const settingsHandler = require("./handlers/settings.handler")

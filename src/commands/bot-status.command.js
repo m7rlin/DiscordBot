@@ -4,10 +4,8 @@ const {
 
 const activities = [
   "PLAYING",
-  "STREAMING",
   "LISTENING",
   "WATCHING",
-  "CUSTOM_STATUS",
   "CLEAR",
 ]
 
@@ -39,14 +37,13 @@ module.exports = {
     if (activityType === "CLEAR") activityName = ""
 
     const presenceOptions = {
-      activity: {
+      activities: [{
         type: activityType,
         name: activityName,
-      },
+      }],
     }
 
-    client.user.setPresence(presenceOptions).then((presence) => {
-      msg.channel.send("✅ Presence successfully changed.")
-    })
+    client.user.setPresence(presenceOptions)
+    msg.channel.send("✅ Presence successfully changed.")
   },
 }
