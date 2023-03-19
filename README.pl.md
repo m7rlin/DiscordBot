@@ -2,7 +2,7 @@
 
 To repozytorium zawiera serię poradników, jak stworzyć bota Discorda przy użyciu NodeJS i biblioteki Discord.JS. Kurs jest przeznaczony dla początkujących, którzy są zainteresowani budową bota Discord i chcą dowiedzieć się więcej o tym procesie.
 
-## 🚀 Funkcje.
+## 🚀 Funkcje
 
 Ten tutorial obejmuje następujące tematy:
 
