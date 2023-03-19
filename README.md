@@ -2,9 +2,20 @@
 
 This repository contains a tutorial series on how to create a Discord bot using NodeJS and Discord.JS library. The tutorial is designed for beginners who are interested in building a Discord bot and want to learn more about the process.
 
+<div align="center">
+<br/>
+<strong>
+<samp>
+
+[English](README.md) · [Polski](README.pl.md)
+
+</samp>
+</strong>
+</div>
+
 ## 🚀 Features
 
-This tutorial covers the following topics:
+This series covers the following topics:
 
 -   Basic setup and installation of NodeJS and Discord.JS library.
 -   Creating a Discord bot and setting up a bot token.
