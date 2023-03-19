@@ -81,5 +81,3 @@ sw.*
 
 # Vim swap files
 *.swp
-
-src/config/servers
