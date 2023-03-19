@@ -1,0 +1,32 @@
+name: Release
+
+on:
+    push:
+        tags:
+            - 'v*'
+
+jobs:
+    release:
+        name: 🚀 release
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - name: 📚 checkout
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+            - name: create release
+              uses: ncipollo/release-action@v1
+              with:
+                  generateReleaseNotes: true
+                  bodyFile: 'changelog-release.md'
+            - name: 🟢 node
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+                  registry-url: https://registry.npmjs.org
+            - name: 🚀 publish to NPM
+              run: npm publish --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
