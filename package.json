@@ -1,7 +1,7 @@
 {
     "name": "discordbot",
     "version": "2.0.0",
-    "description": "",
+    "description": "A tutorial series for beginners on how to create a Discord bot using NodeJS and Discord.JS library.",
     "main": "src/index.js",
     "scripts": {
         "dev": "node src/index.js",
@@ -27,7 +27,7 @@
         "discordowy bot"
     ],
     "author": "Marcin (m7rlin) Stawowczyk",
-    "license": "GPLv3",
+    "license": "GPL-3.0",
     "bugs": {
         "url": "https://github.com/m7rlin/DiscordBot/issues"
     },
