@@ -33,6 +33,36 @@ client.on('messageCreate', (message) => {
         message.reply('Argumenty: ' + args)
     } else if (commandName === 'ping') {
         message.reply('Pong!')
+        // ================================================= //
+        //                                                   //
+        //        Here's some code to get you started:       //
+        //                                                   //
+        // ================================================= //
+    } else if (commandName === 'calc') {
+        const [num1, operator, num2] = args
+        const n1 = parseFloat(num1)
+        const n2 = parseFloat(num2)
+        let result
+
+        switch (operator) {
+            case '+':
+                result = n1 + n2
+                break
+            case '-':
+                result = n1 - n2
+                break
+            case '*':
+                result = n1 * n2
+                break
+            case '/':
+                result = n1 / n2
+                break
+            default:
+                message.reply('Nieprawidłowy operator!')
+                return
+        }
+
+        message.reply(`Wynik: ${result}`)
     } else {
         message.reply('Nie ma takiej komendy!')
     }

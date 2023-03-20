@@ -33,6 +33,19 @@ client.on('messageCreate', (message) => {
         message.reply('Argumenty: ' + args)
     } else if (commandName === 'ping') {
         message.reply('Pong!')
+        // ================================================= //
+        //                                                   //
+        //        Here's some code to get you started:       //
+        //                                                   //
+        // ================================================= //
+    } else if (commandName === 'roll') {
+        const maxNumber = parseInt(args[0])
+        if (isNaN(maxNumber)) {
+            message.reply('Invalid argument. Please enter a number.')
+        } else {
+            const randomNumber = Math.floor(Math.random() * maxNumber) + 1
+            message.reply('You rolled a ' + randomNumber)
+        }
     } else {
         message.reply('Nie ma takiej komendy!')
     }
