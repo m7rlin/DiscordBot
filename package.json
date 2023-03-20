@@ -1,6 +1,6 @@
 {
     "name": "discordbot",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "A tutorial series for beginners on how to create a Discord bot using NodeJS and Discord.JS library.",
     "main": "src/index.js",
     "scripts": {
