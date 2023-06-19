@@ -1,6 +1,6 @@
 const { Client, GatewayIntentBits } = require('discord.js')
 
-const { TOKEN, CLIENT_ID } = require('./config')
+const { TOKEN } = require('./config')
 
 const client = new Client({
     intents: [

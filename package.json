@@ -31,5 +31,8 @@
     "bugs": {
         "url": "https://github.com/m7rlin/DiscordBot/issues"
     },
-    "homepage": "https://github.com/m7rlin/DiscordBot#readme"
+    "homepage": "https://github.com/m7rlin/DiscordBot#readme",
+    "devDependencies": {
+        "eslint": "^8.43.0"
+    }
 }
