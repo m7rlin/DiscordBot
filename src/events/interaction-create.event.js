@@ -1,6 +1,6 @@
-import { Events, Collection } from 'discord.js'
+const { Events, Collection } = require('discord.js')
 
-export default {
+module.exports = {
     name: Events.InteractionCreate,
     async execute(interaction) {
         if (!interaction.isChatInputCommand()) return

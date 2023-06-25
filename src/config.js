@@ -1,5 +1,7 @@
-import 'dotenv/config'
+require('dotenv').config()
 
-export const TOKEN = process.env.TOKEN
-export const CLIENT_ID = process.env.CLIENT_ID
-export const GUILD_ID = process.env.GUILD_ID
+module.exports = {
+    TOKEN: process.env.TOKEN,
+    CLIENT_ID: process.env.CLIENT_ID,
+    GUILD_ID: process.env.GUILD_ID,
+}

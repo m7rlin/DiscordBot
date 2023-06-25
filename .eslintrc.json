@@ -5,9 +5,7 @@
         "es6": true
     },
     "parserOptions": {
-        "ecmaVersion": 2021,
-        "sourceType": "module",
-        "allowImportExportEverywhere": true
+        "ecmaVersion": 2021
     },
     "rules": {
         "arrow-spacing": ["warn", { "before": true, "after": true }],
