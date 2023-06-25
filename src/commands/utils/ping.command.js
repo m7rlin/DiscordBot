@@ -1,11 +1,18 @@
-const { SlashCommandBuilder } = require('discord.js')
+import { SlashCommandBuilder } from 'discord.js'
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName('ping')
         .setDescription('Replies with Pong!'),
 
     async execute(interaction) {
-        await interaction.reply('Pong!')
+        const timestamp = Date.now()
+        await interaction.reply('Pinging...')
+
+        interaction.editReply({
+            content: `Pong! Bot Latency: ${
+                Date.now() - timestamp
+            }ms | API Latency: ${Math.round(interaction.client.ws.ping)}ms`,
+        })
     },
 }

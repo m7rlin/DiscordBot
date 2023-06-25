@@ -1,6 +1,6 @@
-const { SlashCommandBuilder } = require('discord.js')
+import { SlashCommandBuilder } from 'discord.js'
 
-module.exports = {
+export default {
     cooldown: 5,
     data: new SlashCommandBuilder()
         .setName('user')

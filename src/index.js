@@ -1,10 +1,17 @@
-const { Client, GatewayIntentBits, Events, Collection } = require('discord.js')
-const fs = require('node:fs')
-const path = require('node:path')
+import { Client, GatewayIntentBits } from 'discord.js'
+import displayResourcesUsage from './utils/display-resources-usage'
 
-// const registerCommands = require('./register-commands')
+// Anti bot crash system
+import AntiCrash from './anti-crash'
+AntiCrash.init()
 
-const { TOKEN } = require('./config')
+import CommandHandler from './CommandHandler'
+import EventHandler from './EventHandler'
+
+import { TOKEN } from './config'
+import ConsoleAppInfo from './utils/console-app-info'
+
+const RESOURCES_LOG_INTERVAL = 1000 * 1
 
 const client = new Client({
     intents: [
@@ -14,47 +21,37 @@ const client = new Client({
     ],
 })
 
-client.commands = new Collection()
+// Display app info
+ConsoleAppInfo()
 
-client.cooldowns = new Collection()
+// Handlers
+const commandHandler = new CommandHandler(client)
+const eventHandler = new EventHandler(client)
 
-const foldersPath = path.join(__dirname, 'commands')
-const commandFolders = fs.readdirSync(foldersPath)
+;(async () => {
+    // Register commands
+    await Promise.all([
+        commandHandler.loadCommand('./commands/utils/ping.command'),
+        commandHandler.loadCommand('./commands/utils/user.command'),
+        commandHandler.loadCommand('./commands/utils/server.command'),
+    ])
 
-// Register commands
-for (const folder of commandFolders) {
-    const commandsPath = path.join(foldersPath, folder)
-    const commandFiles = fs
-        .readdirSync(commandsPath)
-        .filter((file) => file.endsWith('.js'))
-    for (const file of commandFiles) {
-        const filePath = path.join(commandsPath, file)
-        const command = require(filePath)
-        // Set a new item in the Collection with the key as the command name and the value as the exported module
-        if ('data' in command && 'execute' in command) {
-            client.commands.set(command.data.name, command)
-        } else {
-            console.log(
-                `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`,
-            )
-        }
-    }
-}
+    commandHandler.displayLoadedCommands()
 
-// Register events
-const eventsPath = path.join(__dirname, 'events')
-const eventFiles = fs
-    .readdirSync(eventsPath)
-    .filter((file) => file.endsWith('.js'))
+    // Add handlers to the client
+    client.commandHandler = commandHandler
+    client.eventHandler = eventHandler
 
-for (const file of eventFiles) {
-    const filePath = path.join(eventsPath, file)
-    const event = require(filePath)
-    if (event.once) {
-        client.once(event.name, (...args) => event.execute(...args))
-    } else {
-        client.on(event.name, (...args) => event.execute(...args))
-    }
-}
+    // Login bot
+    client.login(TOKEN)
 
-client.login(TOKEN)
+    // Resources info usage
+    let logInterval = RESOURCES_LOG_INTERVAL
+    if (logInterval <= 0) return
+    if (logInterval < 1000) logInterval = 1000
+
+    displayResourcesUsage()
+    setInterval(() => {
+        displayResourcesUsage()
+    }, logInterval)
+})()

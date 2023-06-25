@@ -1,9 +1,13 @@
-const { Events } = require('discord.js')
+import { Events } from 'discord.js'
+import chalk from 'chalk'
 
-module.exports = {
+export default {
     name: Events.ClientReady,
     once: true,
     execute(client) {
-        console.log(`Zalogowano jako ${client.user.tag}!`)
+        console.log(chalk.greenBright(`Zalogowano jako ${client.user.tag}!`))
+
+        // Register commands
+        client.commandHandler.registerGuildCommands()
     },
 }
