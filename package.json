@@ -4,9 +4,9 @@
     "description": "A tutorial series for beginners on how to create a Discord bot using NodeJS and Discord.JS library.",
     "main": "src/index.js",
     "scripts": {
-        "dev": "node src/index.js",
-        "dev:watch": "nodemon src/index.js",
-        "start": "node src/index.js"
+        "dev": "node --es-module-specifier-resolution=node src/index.js",
+        "dev:watch": "nodemon --es-module-specifier-resolution=node src/index.js",
+        "start": "node --es-module-specifier-resolution=node src/index.js"
     },
     "dependencies": {
         "discord.js": "^14.8.0",
@@ -34,5 +34,6 @@
     "homepage": "https://github.com/m7rlin/DiscordBot#readme",
     "devDependencies": {
         "eslint": "^8.43.0"
-    }
+    },
+    "type": "module"
 }

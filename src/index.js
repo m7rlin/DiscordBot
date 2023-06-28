@@ -1,6 +1,7 @@
-const { Client, GatewayIntentBits } = require('discord.js')
+import { Client, Events, GatewayIntentBits, REST, Routes } from 'discord.js'
 
-const { TOKEN } = require('./config')
+import { TOKEN, CLIENT_ID, GUILD_ID } from './config'
+import pingCommand from './commands/ping.command'
 
 const client = new Client({
     intents: [
@@ -10,32 +11,32 @@ const client = new Client({
     ],
 })
 
-const PREFIX = '!'
-
-client.on('ready', () => {
+client.on(Events.ClientReady, () => {
     console.log(`Zalogowano jako ${client.user.tag}!`)
 })
 
-client.on('messageCreate', (message) => {
-    // Bot message
-    if (message.author.bot) return
+client.on(Events.InteractionCreate, (interaction) => {
+    if (!interaction.isChatInputCommand()) return
 
-    // Ignore messages without prefix
-    if (!message.content.startsWith(PREFIX)) return
-
-    const args = message.content.slice(PREFIX.length).trim().split(/ +/g)
-    const commandName = args.shift().toLowerCase()
-
-    console.log(commandName, args)
-
-    if (commandName === 'info') {
-        message.reply('Nazna komendy: ' + commandName)
-        message.reply('Argumenty: ' + args)
-    } else if (commandName === 'ping') {
-        message.reply('Pong!')
-    } else {
-        message.reply('Nie ma takiej komendy!')
-    }
+    pingCommand.execute(interaction)
 })
+
+const discordCommands = []
+
+const rest = new REST().setToken(TOKEN)
+
+discordCommands.push(pingCommand.data.toJSON())
+
+try {
+    rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), {
+        body: discordCommands,
+    }).then((res) => {
+        console.log(
+            `Successfully reloaded ${res.length} application (/) commands.`,
+        )
+    })
+} catch (error) {
+    console.error(error)
+}
 
 client.login(TOKEN)
