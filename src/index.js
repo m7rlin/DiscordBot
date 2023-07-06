@@ -1,7 +1,7 @@
 import { Client, Events, GatewayIntentBits, REST, Routes } from 'discord.js'
 
 import { TOKEN, CLIENT_ID, GUILD_ID } from './config'
-import pingCommand from './commands/ping.command'
+import pingCommand from './commands/utils/ping.command'
 
 const client = new Client({
     intents: [

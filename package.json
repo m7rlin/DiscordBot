@@ -9,6 +9,8 @@
         "start": "node --es-module-specifier-resolution=node src/index.js"
     },
     "dependencies": {
+        "ascii-table3": "^0.8.2",
+        "chalk": "^5.3.0",
         "discord.js": "^14.8.0",
         "dotenv": "^16.0.3"
     },
