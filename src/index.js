@@ -4,6 +4,10 @@ import { TOKEN, CLIENT_ID, GUILD_ID } from './config'
 import pingCommand from './commands/ping.command'
 import EventHandler from './EventHandler'
 
+// Anti bot crash system
+import AntiCrash from './anti-crash'
+AntiCrash.init()
+
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
