@@ -1,7 +1,8 @@
-import { Client, Events, GatewayIntentBits, REST, Routes } from 'discord.js'
+import { Client, GatewayIntentBits, REST, Routes } from 'discord.js'
 
 import { TOKEN, CLIENT_ID, GUILD_ID } from './config'
-import pingCommand from './commands/utils/ping.command'
+import pingCommand from './commands/ping.command'
+import EventHandler from './EventHandler'
 
 const client = new Client({
     intents: [
@@ -11,15 +12,8 @@ const client = new Client({
     ],
 })
 
-client.on(Events.ClientReady, () => {
-    console.log(`Zalogowano jako ${client.user.tag}!`)
-})
-
-client.on(Events.InteractionCreate, (interaction) => {
-    if (!interaction.isChatInputCommand()) return
-
-    pingCommand.execute(interaction)
-})
+// Handlers
+new EventHandler(client)
 
 const discordCommands = []
 
