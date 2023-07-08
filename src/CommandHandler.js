@@ -4,7 +4,8 @@ import path from 'path'
 import { TOKEN, CLIENT_ID, GUILD_ID } from './config'
 import chalk from 'chalk'
 import { AsciiTable3, AlignmentEnum } from 'ascii-table3'
-import fileDirName from './utils/file-dir-name'
+import fileDirName from './utils/file-dir-name.util'
+import { consola } from 'consola'
 
 const { __dirname } = fileDirName(import.meta)
 
@@ -27,7 +28,7 @@ class CommandHandler {
         this.commandsDir = path.join(__dirname, '..', this.options.autoloadDir)
 
         if (this.options.autoload) {
-            console.log('Auto loading all commands from:', this.commandsDir)
+            consola.info('Auto loading all commands from:', this.commandsDir)
             this.autoloadCommands()
             // Display loaded Commands
             this.displayLoadedCommands()
@@ -43,7 +44,8 @@ class CommandHandler {
         )
 
         if (!fs.existsSync(commandPath)) {
-            console.error('Command path ' + commandPath + ' does not exist.')
+            consola.error('Command path ' + commandPath + ' does not exist.')
+            process.exit(1)
             return
         }
 
@@ -64,7 +66,7 @@ class CommandHandler {
         }
 
         if (this.client.commands.has(command.data.name)) {
-            console.log(
+            consola.warn(
                 chalk.yellow(
                     `Skip: Command '${command.data.name}' already registred!`,
                 ),
@@ -76,15 +78,16 @@ class CommandHandler {
         if ('data' in command && 'execute' in command) {
             this.client.commands.set(command.data.name, command)
         } else {
-            console.log(
-                `[WARNING] The command at ${command._filePath} is missing a required "data" or "execute" property.`,
+            consola.warn(
+                `The command at ${command._filePath} is missing a required "data" or "execute" property.`,
             )
         }
     }
 
     autoloadCommands() {
         if (!fs.existsSync(this.commandsDir)) {
-            console.error('Commands directory does not exist.')
+            consola.error('Commands directory does not exist.')
+            process.exit(1)
             return
         }
 
@@ -129,8 +132,8 @@ class CommandHandler {
         }
 
         try {
-            console.log(
-                `Started refreshing ${this.client.commands.length} application (/) commands.`,
+            consola.info(
+                `Started refreshing ${commands.length} application (/) commands.`,
             )
 
             // The put method is used to fully refresh all commands in the guild with the current set
@@ -139,7 +142,7 @@ class CommandHandler {
                 { body: commands },
             )
 
-            console.log(
+            consola.info(
                 `Successfully reloaded ${data.length} application (/) commands.`,
             )
         } catch (error) {
