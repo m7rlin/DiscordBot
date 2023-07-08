@@ -1,19 +1,17 @@
 import { Collection, REST, Routes } from 'discord.js'
-import fs from 'fs'
+import fileDirNameUtil from './utils/file-dir-name.util'
 import path from 'path'
-import { TOKEN, CLIENT_ID, GUILD_ID } from './config'
+import fs from 'fs'
 import chalk from 'chalk'
-import { AsciiTable3, AlignmentEnum } from 'ascii-table3'
-import fileDirName from './utils/file-dir-name.util'
-import { consola } from 'consola'
+import { AlignmentEnum, AsciiTable3 } from 'ascii-table3'
+import { CLIENT_ID, GUILD_ID, TOKEN } from './config'
 
-const { __dirname } = fileDirName(import.meta)
+const { __dirname } = fileDirNameUtil(import.meta)
 
 class CommandHandler {
     constructor(client, options = {}) {
         this.client = client
         client.commands = new Collection()
-        client.cooldowns = new Collection()
 
         this.options = Object.assign(
             {
@@ -23,16 +21,86 @@ class CommandHandler {
             options,
         )
 
-        // console.log('olptions', this.options)
-
         this.commandsDir = path.join(__dirname, '..', this.options.autoloadDir)
 
         if (this.options.autoload) {
-            consola.info('Auto loading all commands from:', this.commandsDir)
+            console.log('Auto loading all commands from:', this.commandsDir)
+
             this.autoloadCommands()
-            // Display loaded Commands
-            this.displayLoadedCommands()
         }
+    }
+
+    async autoloadCommands() {
+        if (!fs.existsSync(this.commandsDir)) {
+            console.error('Commands directory does not exist!')
+            process.exit(1)
+        }
+
+        const commandFolders = fs
+            .readdirSync(this.commandsDir, {
+                withFileTypes: true,
+            })
+            .filter((dirent) => dirent.isDirectory())
+            .map((dirent) => dirent.name)
+
+        // console.log(commandFolders)
+
+        for (const folder of commandFolders) {
+            const folderPath = path.join(this.commandsDir, folder)
+
+            // console.log('folderPath', folderPath)
+
+            const commandFiles = fs
+                .readdirSync(folderPath)
+                .filter((fileName) => fileName.endsWith('.js'))
+
+            for (const file of commandFiles) {
+                const filePath = path.join(folderPath, file)
+
+                const command = await import(`file://${filePath}`).then(
+                    (res) => res.default,
+                )
+
+                // Store path for reloading
+                command._filePath = filePath
+
+                // console.log(filePath)
+
+                // console.log('command', command)
+
+                this.loadCommandAsCommand(command)
+            }
+
+            // console.log(commandFiles)
+        }
+
+        this.displayLoadedCommands()
+    }
+
+    loadCommandAsCommand(command) {
+        if (!command) throw new Error('"command" is missing!')
+        if (typeof command !== 'object') {
+            throw new Error('"command" must be an object!')
+        }
+
+        if ('data' in command == false || 'execute' in command == false) {
+            console.warn(
+                `The command at ${command._filePath} has missing a required "data" or "execute" property.`,
+            )
+            process.exit(1)
+        }
+
+        if (this.client.commands.has(command.data.name)) {
+            console.warn(
+                chalk.yellow(
+                    `Skip: Command '${command.data.name}' is already registred!`,
+                ),
+            )
+            return
+        }
+
+        // Save command in commands
+        this.client.commands.set(command.data.name, command)
     }
 
     async loadCommand(commandPath) {
@@ -44,9 +112,8 @@ class CommandHandler {
         )
 
         if (!fs.existsSync(commandPath)) {
-            consola.error('Command path ' + commandPath + ' does not exist.')
+            console.error('Command path ' + commandPath + ' does not exist.')
             process.exit(1)
-            return
         }
 
         const command = await import(`file://${commandPath}`).then(
@@ -59,100 +126,8 @@ class CommandHandler {
         this.loadCommandAsCommand(command)
     }
 
-    loadCommandAsCommand(command) {
-        if (!command) throw new Error('"command" is missing!')
-        if (typeof command !== 'object') {
-            throw new Error('"command" must be an object!')
-        }
-
-        if (this.client.commands.has(command.data.name)) {
-            consola.warn(
-                chalk.yellow(
-                    `Skip: Command '${command.data.name}' already registred!`,
-                ),
-            )
-            return
-        }
-
-        // Set a new item in the Collection with the key as the command name and the value as the exported module
-        if ('data' in command && 'execute' in command) {
-            this.client.commands.set(command.data.name, command)
-        } else {
-            consola.warn(
-                `The command at ${command._filePath} is missing a required "data" or "execute" property.`,
-            )
-        }
-    }
-
-    autoloadCommands() {
-        if (!fs.existsSync(this.commandsDir)) {
-            consola.error('Commands directory does not exist.')
-            process.exit(1)
-            return
-        }
-
-        const commandFolders = fs
-            .readdirSync(this.commandsDir, {
-                withFileTypes: true,
-            })
-            .filter((dirent) => dirent.isDirectory())
-            .map((dirent) => dirent.name)
-
-        // console.log('commandFolders:', commandFolders)
-
-        for (const folder of commandFolders) {
-            const folderPath = path.join(this.commandsDir, folder)
-
-            // console.log('folderPath:', folderPath)
-
-            const commandFiles = fs
-                .readdirSync(folderPath)
-                .filter((file) => file.endsWith('.js'))
-
-            for (const file of commandFiles) {
-                const filePath = path.join(folderPath, file)
-                const command = require(filePath)
-
-                // Store path for reloading
-                command._filePath = filePath
-
-                this.loadCommandAsCommand(command)
-            }
-        }
-    }
-
-    async registerGuildCommands() {
-        // Construct and prepare an instance of the REST module
-        const rest = new REST().setToken(TOKEN)
-
-        const commands = []
-
-        for (const command of this.client.commands.values()) {
-            commands.push(command.data.toJSON())
-        }
-
-        try {
-            consola.info(
-                `Started refreshing ${commands.length} application (/) commands.`,
-            )
-
-            // The put method is used to fully refresh all commands in the guild with the current set
-            const data = await rest.put(
-                Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
-                { body: commands },
-            )
-
-            consola.info(
-                `Successfully reloaded ${data.length} application (/) commands.`,
-            )
-        } catch (error) {
-            // And of course, make sure you catch and log any errors!
-            console.error(error)
-        }
-    }
-
     displayLoadedCommands() {
-        // create table
+        // Create table
         const table = new AsciiTable3('Commands')
             .setHeading('#', 'Name', 'Message')
             .setAlign(3, AlignmentEnum.CENTER)
@@ -164,6 +139,35 @@ class CommandHandler {
         }
 
         console.log(table.toString())
+    }
+
+    async registerGuildCommands() {
+        const rest = new REST().setToken(TOKEN)
+
+        const commands = []
+
+        for (const command of this.client.commands.values()) {
+            commands.push(command.data.toJSON())
+        }
+
+        try {
+            console.log(
+                `Started refreshing ${commands.length} application (/) commands.`,
+            )
+
+            const data = await rest.put(
+                Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
+                {
+                    body: commands,
+                },
+            )
+
+            console.log(
+                `Successfully reloaded ${data.length} application (/) commands.`,
+            )
+        } catch (error) {
+            console.error(error)
+        }
     }
 }
 
