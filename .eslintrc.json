@@ -4,12 +4,7 @@
         "node": true,
         "es6": true
     },
-    "parser": "@babel/eslint-parser",
     "parserOptions": {
-        "requireConfigFile": false,
-        "babelOptions": {
-            "plugins": ["@babel/plugin-syntax-import-assertions"]
-        },
         "ecmaVersion": 2021,
         "sourceType": "module",
         "allowImportExportEverywhere": true
