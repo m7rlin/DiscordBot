@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import fileDirName from './utils/file-dir-name'
+import fileDirName from './utils/file-dir-name.util'
 
 const { __dirname } = fileDirName(import.meta)
 
