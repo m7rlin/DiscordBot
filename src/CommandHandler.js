@@ -13,6 +13,7 @@ class CommandHandler {
     constructor(client, options = {}) {
         this.client = client
         client.commands = new Collection()
+        client.cooldowns = new Collection()
 
         this.options = Object.assign(
             {
