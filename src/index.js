@@ -1,17 +1,13 @@
+import { consola } from 'consola'
 import { Client, GatewayIntentBits } from 'discord.js'
-import displayResourcesUsage from './utils/display-resources-usage'
-
-// Anti bot crash system
-import AntiCrash from './anti-crash'
-AntiCrash.init()
-
+import packageJson from '../package.json' assert { type: 'json' }
 import CommandHandler from './CommandHandler'
 import EventHandler from './EventHandler'
-
+import AntiCrash from './anti-crash'
 import { TOKEN } from './config'
-import ConsoleAppInfo from './utils/console-app-info'
 
-const RESOURCES_LOG_INTERVAL = 1000 * 1
+// Anti bot crash system
+AntiCrash.init()
 
 const client = new Client({
     intents: [
@@ -21,37 +17,21 @@ const client = new Client({
     ],
 })
 
-// Display app info
-ConsoleAppInfo()
-
 // Handlers
 const commandHandler = new CommandHandler(client)
 const eventHandler = new EventHandler(client)
 
-;(async () => {
-    // Register commands
-    await Promise.all([
-        commandHandler.loadCommand('./commands/utils/ping.command'),
-        commandHandler.loadCommand('./commands/utils/user.command'),
-        commandHandler.loadCommand('./commands/utils/server.command'),
-    ])
+consola.start(`Starting app '${packageJson.name}'`)
+consola.box(`Author:  ${packageJson.author}\nVersion: ${packageJson.version}`)
 
-    commandHandler.displayLoadedCommands()
+// Register commands
+await Promise.all([commandHandler.loadCommand('./commands/utils/ping.command')])
 
-    // Add handlers to the client
-    client.commandHandler = commandHandler
-    client.eventHandler = eventHandler
+commandHandler.displayLoadedCommands()
 
-    // Login bot
-    client.login(TOKEN)
+// Add handlers to the client
+client.commandHandler = commandHandler
+client.eventHandler = eventHandler
 
-    // Resources info usage
-    let logInterval = RESOURCES_LOG_INTERVAL
-    if (logInterval <= 0) return
-    if (logInterval < 1000) logInterval = 1000
-
-    displayResourcesUsage()
-    setInterval(() => {
-        displayResourcesUsage()
-    }, logInterval)
-})()
+// Login bot
+client.login(TOKEN)

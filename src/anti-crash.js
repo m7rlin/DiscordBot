@@ -1,20 +1,18 @@
+import { consola } from 'consola'
+
 export default {
     init: () => {
         process.on('unhandledRejection', (reason, p) => {
-            console.log(' [antiCrash] :: Unhandled Rejection/Catch')
-            console.log(reason, p)
+            consola.error(' [antiCrash] :: Unhandled Rejection/Catch')
+            consola.error(reason, p)
         })
         process.on('uncaughtException', (err, origin) => {
-            console.log(' [antiCrash] :: Uncaught Exception/Catch')
-            console.log(err, origin)
+            consola.error(' [antiCrash] :: Uncaught Exception/Catch')
+            consola.error(err, origin)
         })
         process.on('uncaughtExceptionMonitor', (err, origin) => {
-            console.log(' [antiCrash] :: Uncaught Exception/Catch (MONITOR)')
-            console.log(err, origin)
-        })
-        process.on('multipleResolves', () => {
-            // console.log(' [antiCrash] :: Multiple Resolves');
-            // console.log(type, promise, reason);
+            consola.error(' [antiCrash] :: Uncaught Exception/Catch (MONITOR)')
+            consola.error(err, origin)
         })
     },
 }

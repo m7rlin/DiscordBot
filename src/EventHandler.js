@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
-import fileDirName from './utils/file-dir-name'
+import fileDirName from './utils/file-dir-name.util'
+import { consola } from 'consola'
 
 const { __dirname } = fileDirName(import.meta)
 
@@ -15,7 +16,7 @@ class EventHandler {
         const eventsDir = path.join(__dirname, 'events')
 
         if (!fs.existsSync(eventsDir)) {
-            console.error('Events directory does not exist.')
+            consola.error('Events directory does not exist.')
             return
         }
 
