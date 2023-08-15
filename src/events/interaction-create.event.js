@@ -27,21 +27,24 @@ export default {
         const cooldownAmount =
             (command.cooldown ?? DEFAULT_COMMAND_COOLDOWN) * 1000
 
-        if (timestamps.has(interaction.user.id)) {
-            const expirationTime =
-                timestamps.get(interaction.user.id) + cooldownAmount
+        const userId = interaction.user.id
+
+        if (timestamps.has(userId)) {
+            const expirationTime = timestamps.get(userId) + cooldownAmount
 
             if (now < expirationTime) {
                 const expiredTimestamp = Math.round(expirationTime / 1000)
                 return interaction.reply({
-                    content: `Please wait, you are on a cooldown for \`${command.data.name}\`. You can use it again <t:${expiredTimestamp}:R>.`,
+                    content: `Komendę ${commandName} możesz ponownie użyć <t:${expiredTimestamp}:R>.`,
                     ephemeral: true,
                 })
             }
         }
 
-        timestamps.set(interaction.user.id, now)
-        setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount)
+        // Set cooldown
+        timestamps.set(userId, now)
+        // Delete cooldown
+        setTimeout(() => timestamps.delete(userId), cooldownAmount)
 
         try {
             // Execute command
@@ -49,7 +52,7 @@ export default {
         } catch (error) {
             consola.error(error)
             await interaction.reply({
-                content: 'There was an error while executing this command!',
+                content: 'Wystąpił błąd podczas wykonywania tego polecenia!',
                 ephemeral: true,
             })
         }
