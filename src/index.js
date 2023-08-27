@@ -3,7 +3,7 @@ import { Client, GatewayIntentBits } from 'discord.js'
 import packageJson from '../package.json' assert { type: 'json' }
 import CommandHandler from './CommandHandler'
 import EventHandler from './EventHandler'
-import AntiCrash from './anti-crash'
+import AntiCrash from './utils/anti-crash.util'
 import { TOKEN } from './config'
 
 // Anti bot crash system
@@ -25,7 +25,10 @@ consola.start(`Starting app '${packageJson.name}'`)
 consola.box(`Author:  ${packageJson.author}\nVersion: ${packageJson.version}`)
 
 // Register commands
-await Promise.all([commandHandler.loadCommand('./commands/utils/ping.command')])
+await Promise.all([
+    commandHandler.loadCommand('./commands/utils/ping.command'),
+    commandHandler.loadCommand('./commands/utils/test.command'),
+])
 
 commandHandler.displayLoadedCommands()
 
