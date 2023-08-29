@@ -4,7 +4,7 @@ export default {
     cooldown: 5,
     data: new SlashCommandBuilder()
         .setName('ping')
-        .setDescription('Replies with Pong, bot and API latency!'),
+        .setDescription('Odpowiada Pong oraz opóźnieniem bota i API!'),
 
     async execute(interaction) {
         const timestamp = Date.now()
