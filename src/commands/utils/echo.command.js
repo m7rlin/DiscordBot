@@ -9,7 +9,16 @@ export default {
             option
                 .setName('input')
                 .setDescription('Tekst do odpowiedzenia.')
-                .setRequired(true),
+                .setRequired(true)
+                .setMinLength(10)
+                .setMaxLength(20),
+        )
+        .addIntegerOption((option) =>
+            option
+                .setName('money')
+                .setDescription('Ilosc pieniedzy.')
+                .setMinValue(10)
+                .setMaxValue(100),
         )
         .addBooleanOption((option) =>
             option.setName('embed').setDescription('Jest embed?'),
