@@ -1,4 +1,4 @@
-## Odcinek 9
+## Odcinek 10
 
-Temat:
+Temat: Argumenty komend
 YouTube:
