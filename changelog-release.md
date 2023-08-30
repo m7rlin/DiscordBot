@@ -1,4 +1,4 @@
-## Odcinek 12
+## Odcinek 13
 
-Temat: Ładowanie listy opcji z pliku
+Temat: Subkomendy
 YouTube:
