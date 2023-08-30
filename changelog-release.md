@@ -1,4 +1,4 @@
-## Odcinek 9
+## Odcinek 12
 
-Temat:
+Temat: Ładowanie listy opcji z pliku
 YouTube:
