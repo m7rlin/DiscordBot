@@ -1,6 +1,6 @@
 {
     "name": "discordbot",
-    "version": "2.12.0",
+    "version": "2.13.0",
     "description": "A tutorial series for beginners on how to create a Discord bot using NodeJS and Discord.JS library.",
     "main": "src/index.js",
     "scripts": {
@@ -13,7 +13,8 @@
         "chalk": "^5.3.0",
         "consola": "^3.2.3",
         "discord.js": "^14.13.0",
-        "dotenv": "^16.3.1"
+        "dotenv": "^16.3.1",
+        "lodash-es": "^4.17.21"
     },
     "repository": {
         "type": "git",

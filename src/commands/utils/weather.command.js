@@ -1,4 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js'
+import weatherData from '../../../data/voivodships.json' assert { type: 'json' }
+import { deburr } from 'lodash-es'
 
 export default {
     cooldown: 0,
@@ -16,38 +18,38 @@ export default {
     async execute(interaction) {
         const voivod = interaction.options.getString('voivod')
 
-        interaction.reply(`Informacje o pogodzie w województwie **${voivod}**`)
+        const data = weatherData[voivod]
+
+        interaction.reply(
+            `Informacje o pogodzie w województwie **${data.name}**\nTemperatura: ${data.weather.temperature}\nPogoda: ${data.weather.description}`,
+        )
     },
 
     autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused()
 
-        console.log('focusedValue', focusedValue)
+        const keys = Object.keys(weatherData)
 
-        const choices = ['Małopolskie', 'Mazowieckie']
+        const filtered = keys.filter((x) =>
+            x.startsWith(deburr(focusedValue.toLowerCase())),
+        )
 
-        const test = (choice) => {
-            console.log('choice', choice)
-            return choice.startsWith(focusedValue)
-        }
+        // console.log('filtered', filtered)
+        // console.log(Object.entries(weatherData))
 
-        const filtered = choices.filter(test)
+        const filteredData = filtered.map((key) => {
+            const data = weatherData[key]
+            data.key = key
+            return data
+        })
 
-        console.log('filtered', filtered)
+        // console.log('filteredData', filteredData)
 
-        // const respond = []
-        // filtered.forEach((value) => {
-        //     respond.push({
-        //         name: value,
-        //         value,
-        //     })
-        // })
-
-        const respond = filtered.map((x) => ({
-            name: x,
-            value: x,
-        }))
-
-        interaction.respond(respond)
+        interaction.respond(
+            filteredData.map((voivod) => ({
+                name: voivod.name,
+                value: voivod.key,
+            })),
+        )
     },
 }
