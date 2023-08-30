@@ -1,0 +1,86 @@
+{
+    "dolnoslaskie": {
+        "name": "Dolnośląskie",
+        "weather": {
+            "temperature": 20,
+            "description": "Słonecznie"
+        }
+    },
+    "kujawsko_pomorskie": {
+        "name": "Kujawsko-pomorskie",
+        "weather": {
+            "temperature": 18,
+            "description": "Częściowe zachmurzenie"
+        }
+    },
+    "lubelskie": {
+        "name": "Lubelskie",
+        "weather": {
+            "temperature": 16,
+            "description": "Przeważnie pochmurno"
+        }
+    },
+    "lodzkie": {
+        "name": "Łódzkie",
+        "weather": {
+            "temperature": 17,
+            "description": "Kilka chmurek"
+        }
+    },
+    "malopolskie": {
+        "name": "Małopolskie",
+        "weather": {
+            "temperature": 19,
+            "description": "Słonecznie"
+        }
+    },
+    "mazowiecki": {
+        "name": "Mazowieckie",
+        "weather": {
+            "temperature": 21,
+            "description": "Słonecznie"
+        }
+    },
+    "podkarpackie": {
+        "name": "Podkarpackie",
+        "weather": {
+            "temperature": 18,
+            "description": "Częściowe zachmurzenie"
+        }
+    },
+    "podlaskie": {
+        "name": "Podlaskie",
+        "weather": {
+            "temperature": 17,
+            "description": "Przeważnie pochmurno"
+        }
+    },
+    "pomorskie": {
+        "name": "Pomorskie",
+        "weather": {
+            "temperature": 20,
+            "description": "Słonecznie"
+        }
+    },
+    "slaskie": {
+        "name": "Śląskie",
+        "weather": {
+            "temperature": 22,
+            "description": "Słonecznie"
+        }
+    },
+    "wielkopolskie": {
+        "name": "Wielkopolskie",
+        "weather": {
+            "temperature": 19,
+            "description": "Słonecznie"
+        }
+    },
+    "zachodniopomorskie": {
+        "name": "Zachodniopomorskie",
+        "weather": {
+            "temperature": 21,
+            "description": "Słonecznie"
+        }
+    }
+}

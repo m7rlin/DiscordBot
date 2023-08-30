@@ -27,7 +27,10 @@ consola.box(`Author:  ${packageJson.author}\nVersion: ${packageJson.version}`)
 // Register commands
 await Promise.all([
     commandHandler.loadCommand('./commands/utils/ping.command'),
-    commandHandler.loadCommand('./commands/utils/test.command'),
+    commandHandler.loadCommand('./commands/utils/echo.command'),
+    commandHandler.loadCommand('./commands/utils/meme.command'),
+    commandHandler.loadCommand('./commands/utils/info.command'),
+    commandHandler.loadCommand('./commands/utils/weather.command'),
 ])
 
 commandHandler.displayLoadedCommands()
