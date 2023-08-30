@@ -25,10 +25,7 @@ consola.start(`Starting app '${packageJson.name}'`)
 consola.box(`Author:  ${packageJson.author}\nVersion: ${packageJson.version}`)
 
 // Register commands
-await Promise.all([
-    commandHandler.loadCommand('./commands/utils/ping.command'),
-    commandHandler.loadCommand('./commands/utils/test.command'),
-])
+await Promise.all([commandHandler.loadCommand('./commands/utils/ping.command')])
 
 commandHandler.displayLoadedCommands()
 
