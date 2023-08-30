@@ -1,4 +1,4 @@
-## Odcinek 9
+## Odcinek 13
 
-Temat:
+Temat: Subkomendy
 YouTube:

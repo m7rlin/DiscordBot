@@ -1,5 +1,5 @@
-import { consola } from 'consola'
 import { Events } from 'discord.js'
+import { consola } from 'consola'
 
 export default {
     name: Events.InteractionCreate,

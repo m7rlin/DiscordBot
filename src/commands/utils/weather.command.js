@@ -1,51 +1,55 @@
 import { SlashCommandBuilder } from 'discord.js'
+import weatherData from '../../../data/voivodships.json' assert { type: 'json' }
+import { deburr } from 'lodash-es'
 
 export default {
-    cooldown: 5,
+    cooldown: 0,
     data: new SlashCommandBuilder()
         .setName('weather')
-
         .setDescription('Displays weather informations!')
         .addStringOption((option) =>
             option
                 .setName('voivod')
                 .setDescription('Województwo')
+                .setRequired(true)
                 .setAutocomplete(true),
         ),
 
     async execute(interaction) {
-        const voivod = interaction.options.getString('voivod') ?? 'default'
+        const voivod = interaction.options.getString('voivod')
 
-        interaction.reply(`Informacje o pogodzie w województwie **${voivod}**`)
+        const data = weatherData[voivod]
+
+        interaction.reply(
+            `Informacje o pogodzie w województwie **${data.name}**\nTemperatura: ${data.weather.temperature}\nPogoda: ${data.weather.description}`,
+        )
     },
 
     autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused()
 
-        console.log(focusedValue)
+        const keys = Object.keys(weatherData)
 
-        const choices = [
-            'Dolnośląskie',
-            'Kujawsko-pomorskie',
-            'Lubelskie',
-            'Łódzkie',
-        ]
-        const filteredCoices = choices.map((x) => {
-            return x.toLowerCase()
-        })
-        const filtered = filteredCoices.filter((choice) =>
-            choice.startsWith(focusedValue.toLowerCase()),
+        const filtered = keys.filter((x) =>
+            x.startsWith(deburr(focusedValue.toLowerCase())),
         )
 
-        console.log('filtered', filtered)
+        // console.log('filtered', filtered)
+        // console.log(Object.entries(weatherData))
 
-        const respond = [
-            {
-                name: 'ABC',
-                value: 'abc',
-            },
-        ]
+        const filteredData = filtered.map((key) => {
+            const data = weatherData[key]
+            data.key = key
+            return data
+        })
 
-        interaction.respond(respond)
+        // console.log('filteredData', filteredData)
+
+        interaction.respond(
+            filteredData.map((voivod) => ({
+                name: voivod.name,
+                value: voivod.key,
+            })),
+        )
     },
 }

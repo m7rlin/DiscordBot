@@ -4,28 +4,42 @@ export default {
     cooldown: 0,
     data: new SlashCommandBuilder()
         .setName('echo')
-        .setDescription('Odpowiada twoim tekstem.')
+        .setDescription('Odpowiada tekstem użytkownika.')
         .addStringOption((option) =>
-            option.setName('input').setDescription('Tekst do odpowiedzenia.'),
-        )
-        .addChannelOption((option) =>
             option
-                .setName('channel')
-                .setDescription('The channel to echo into'),
+                .setName('input')
+                .setDescription('Tekst do odpowiedzenia.')
+                .setRequired(true)
+                .setMinLength(10)
+                .setMaxLength(20),
         )
         .addIntegerOption((option) =>
             option
-                .setName('integer')
-                .setDescription('The integer to echo into'),
+                .setName('money')
+                .setDescription('Ilosc pieniedzy.')
+                .setMinValue(10)
+                .setMaxValue(100),
         )
         .addBooleanOption((option) =>
-            option.setName('ephemeral').setDescription('Wyświetl jako embed.'),
+            option.setName('embed').setDescription('Jest embed?'),
+        )
+        .addRoleOption((option) =>
+            option.setName('role').setDescription('Rola'),
+        )
+        .addUserOption((option) =>
+            option.setName('user').setDescription('User'),
+        )
+        .addChannelOption((option) =>
+            option.setName('channel').setDescription('Channel'),
         ),
     async execute(interaction) {
         const input = interaction.options.getString('input')
-        if (!input) return interaction.reply("Nie podano argumentu 'input'!")
+        const channel = interaction.options.getChannel('channel')
+        const isEmbed = interaction.options.getBoolean('embed')
 
-        console.log(interaction.options.getBoolean('ephemeral'))
+        console.log('input', input)
+        console.log('channel', channel)
+        console.log('isEmbed', isEmbed)
 
         interaction.reply(input)
     },
