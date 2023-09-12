@@ -31,6 +31,7 @@ await Promise.all([
     commandHandler.loadCommand('./commands/utils/meme.command'),
     commandHandler.loadCommand('./commands/utils/weather.command'),
     commandHandler.loadCommand('./commands/utils/poradnik.command'),
+    commandHandler.loadCommand('./commands/fun/cat.command'),
 ])
 
 commandHandler.displayLoadedCommands()
