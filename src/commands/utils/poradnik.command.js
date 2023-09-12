@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, bold } from 'discord.js'
+import { SlashCommandBuilder } from 'discord.js'
 
 export default {
     cooldown: 0,
@@ -8,7 +8,7 @@ export default {
         .addStringOption((option) =>
             option
                 .setName('category')
-                .setDescription('Kategoria poradnika')
+                .setDescription('Kategoria podnika')
                 .setAutocomplete(true),
         )
         .addStringOption((option) =>
@@ -22,40 +22,50 @@ export default {
         const category = interaction.options.getString('category')
         const query = interaction.options.getString('query')
 
-        interaction.reply(`category: ${bold(category)} query: ${bold(query)}`)
+        interaction.reply(`Kategoria: ${category} | Szukasz: ${query}`)
     },
 
-    async autocomplete(interaction) {
+    autocomplete(interaction) {
         const focusedOption = interaction.options.getFocused(true)
+
+        console.log('focusedOption', focusedOption)
 
         let choices
 
         if (focusedOption.name === 'query') {
             choices = [
-                'Popular Topics: Threads',
-                'Sharding: Getting started',
-                'Library: Voice Connections',
-                'Interactions: Replying to slash commands',
-                'Popular Topics: Embed preview',
+                'Moje ustawienia VSCODE',
+                'Jak stworzyc serwer Minecraft',
+                'Darmowy serwer Aternos',
+                'DiscordJS Bot od podstaw',
             ]
         }
 
         if (focusedOption.name === 'category') {
-            choices = [
-                'minecraft',
-                'discord',
-                'discordjs',
-                'web',
-                'minecraft plugin',
-            ]
+            choices = ['vscode', 'minecraft', 'minecraft server', 'discordjs']
         }
 
         const filtered = choices.filter((choice) =>
             choice.startsWith(focusedOption.value),
         )
 
-        await interaction.respond(
-            filtered.map((choice) => ({ name: choice, value: choice })),
+        // console.log(
+        //     'without filter:',
+        //     filtered,
+        //     'with filter:',
+        //     filtered.map(function (choice) {
+        //         return {
+        //             name: choice,
+        //             value: choice,
+        //         }
+        //     }),
+        // )
+
+        interaction.respond(
+            filtered.map((choice) => ({
+                name: choice,
+                value: choice,
+            })),
         )
     },
 }
