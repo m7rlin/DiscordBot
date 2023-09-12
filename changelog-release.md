@@ -1,4 +1,4 @@
-## Odcinek 14
+## Odcinek 15
 
-Temat: Tłumaczenie komend
+Temat: Podkomendy i Grupy komend
 YouTube:
