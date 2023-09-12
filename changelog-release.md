@@ -1,4 +1,4 @@
-## Odcinek 13
+## Odcinek 14
 
-Temat: Subkomendy
+Temat: Tłumaczenie komend
 YouTube:
