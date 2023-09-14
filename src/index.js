@@ -34,7 +34,6 @@ await Promise.all([
     commandHandler.loadCommand('./commands/fun/cat.command'),
     commandHandler.loadCommand('./commands/utils/info.command'),
     commandHandler.loadCommand('./commands/music/music.command'),
-    commandHandler.loadCommand('./commands/level/xp.command'),
 ])
 
 commandHandler.displayLoadedCommands()
