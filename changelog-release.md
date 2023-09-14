@@ -1,4 +1,4 @@
-## Odcinek 14
+## Odcinek 16
 
-Temat: Tłumaczenie komend
+Temat:
 YouTube:
