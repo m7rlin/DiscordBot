@@ -19,17 +19,17 @@ export default {
 
     async execute(interaction) {
         const commandUser = interaction.user
-        const userToBan = interaction.options.getUser('user')
+        const targetUser = interaction.options.getUser('user')
         const reason =
             interaction.options.getString('reason') || 'Brak podanego powodu.'
 
         // Sprawdź, czy próbuje zbanować samego siebie
-        if (userToBan.id === commandUser.id) {
+        if (targetUser.id === commandUser.id) {
             return interaction.reply('Nie możesz zbanować samego siebie.')
         }
 
         // Sprawdź, czy próbuje zbanować tego bota
-        if (userToBan.id === interaction.client.user.id) {
+        if (targetUser.id === interaction.client.user.id) {
             return interaction.reply('Nie mogę zbanować samego siebie.')
         }
 
@@ -43,7 +43,7 @@ export default {
         const commandMember = interaction.guild.members.cache.get(
             commandUser.id,
         )
-        const memberToBan = userToBan.guild.members.cache.get(userToBan.id)
+        const memberToBan = targetUser.guild.members.cache.get(targetUser.id)
 
         if (
             commandMember.roles.highest.position <=
@@ -58,7 +58,7 @@ export default {
         await memberToBan.ban({ reason })
 
         await interaction.reply(
-            `Zbanowano użytkownika ${userToBan.tag} z powodem: "${reason}"`,
+            `Zbanowano użytkownika ${targetUser.tag} z powodem: "${reason}"`,
         )
     },
 }
