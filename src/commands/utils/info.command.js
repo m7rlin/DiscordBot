@@ -29,12 +29,12 @@ export default {
         // /info server
         // /info bot
         const subcommand = interaction.options.getSubcommand()
-        console.log(subcommand)
+        // console.log(subcommand)
 
         if (subcommand === 'bot') {
             const bot = interaction.client.user
 
-            console.log(bot)
+            // console.log(bot)
 
             const botEmbed = {
                 color: 0x9a28fb,
