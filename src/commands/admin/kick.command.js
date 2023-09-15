@@ -18,7 +18,6 @@ export default {
         .setDMPermission(false),
 
     async execute(interaction) {
-        const commandUser = interaction.user
         const targetUser = interaction.options.getUser('user')
         const reason =
             interaction.options.getString('reason') || 'Brak podanego powodu.'
@@ -27,26 +26,9 @@ export default {
 
         const commandMember = interaction.member
         const botMember = interaction.guild.members.me
-        const targetMember = await interaction.guild.members
-            .fetch(targetUser.id)
-            .catch((error) => {
-                return null
-            })
-
-        if (targetMember == null) {
-            interaction.editReply('Użytkownik nie jest członkiem tej gildii!')
-            return
-        }
-
-        // Sprawdź, czy użytkownik próbuje wyrzucić samego siebie
-        if (targetUser.id === commandUser.id) {
-            return interaction.editReply('Nie możesz wyrzucić samego siebie.')
-        }
-
-        // Sprawdź, czy użytkownik próbuje wyrzucić tego bota
-        if (targetUser.id === interaction.client.user.id) {
-            return interaction.editReply('Nie mogę wyrzucić samego siebie.')
-        }
+        const targetMember = await interaction.guild.members.cache.get(
+            targetUser.id,
+        )
 
         // Sprawdź uprawnienia użytkownika
         if (!commandMember.permissions.has(PermissionFlagsBits.KickMembers)) {
@@ -80,13 +62,6 @@ export default {
             )
         }
 
-        // Właściciel serwera zawsze może wyrzucić użytkownika
-        if (interaction.user.id === interaction.guild.ownerId) {
-            console.log('Komenda uzyta przez wlasciciela serwera!')
-            // Wyrzuć użytkownika
-            return await this.kick(interaction, targetMember, reason)
-        }
-
         if (targetHighestRolePosition >= commandMemberHighestRolePosition) {
             return interaction.editReply(
                 'Nie możesz wyrzucić użytkownika o wyższej lub równej roli.',
@@ -97,11 +72,6 @@ export default {
             return interaction.editReply('Nie mogę wyrzucić tego użytkownika.')
         }
 
-        // Wyrzuć użytkownika
-        await this.kick(interaction, targetMember, reason)
-    },
-
-    async kick(interaction, targetMember, reason) {
         try {
             await targetMember.kick({ reason })
 
