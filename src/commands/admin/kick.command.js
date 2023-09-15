@@ -23,28 +23,28 @@ export default {
         const reason =
             interaction.options.getString('reason') || 'Brak podanego powodu.'
 
-        await interaction.deferReply()
+        await interaction.deferReply({ ephemeral: true })
 
         const commandMember = interaction.member
         const botMember = interaction.guild.members.me
+        // const targetMember = interaction.guild.members.cache.get(targetUser.id)
         const targetMember = await interaction.guild.members
             .fetch(targetUser.id)
-            .catch((error) => {
-                return null
-            })
+            .catch(() => null)
 
         if (targetMember == null) {
-            interaction.editReply('Użytkownik nie jest członkiem tej gildii!')
-            return
+            return interaction.editReply(
+                'Użytkownik nie jest członkiem tej gildii!',
+            )
         }
 
         // Sprawdź, czy użytkownik próbuje wyrzucić samego siebie
-        if (targetUser.id === commandUser.id) {
+        if (targetUser.id == commandMember.user.id) {
             return interaction.editReply('Nie możesz wyrzucić samego siebie.')
         }
 
         // Sprawdź, czy użytkownik próbuje wyrzucić tego bota
-        if (targetUser.id === interaction.client.user.id) {
+        if (targetUser.id == interaction.client.user.id) {
             return interaction.editReply('Nie mogę wyrzucić samego siebie.')
         }
 
@@ -63,17 +63,17 @@ export default {
         }
 
         const targetHighestRolePosition = targetMember.roles.highest.position
-        const commandMemberHighestRolePosition =
-            commandMember.roles.highest.position
+        const commandHighestRolePosition = commandMember.roles.highest.position
         const botHighestRolePosition =
             interaction.guild.members.me.roles.highest.position
 
         // console.log(
-        //     commandMemberHighestRolePosition,
+        //     commandHighestRolePosition,
         //     targetHighestRolePosition,
         //     botHighestRolePosition,
         // )
 
+        // Sprawdź, czy użytkownik ma wyższą/równą rangę niż bot
         if (targetHighestRolePosition >= botHighestRolePosition) {
             return interaction.editReply(
                 'Nie mogę wyrzucić użytkownika o wyższej lub równej roli.',
@@ -82,17 +82,18 @@ export default {
 
         // Właściciel serwera zawsze może wyrzucić użytkownika
         if (interaction.user.id === interaction.guild.ownerId) {
-            console.log('Komenda uzyta przez wlasciciela serwera!')
-            // Wyrzuć użytkownika
-            return await this.kick(interaction, targetMember, reason)
+            // console.log('Komenda uzyta przez wlasciciela serwera!')
+            return this.kick(interaction, targetMember, reason)
         }
 
-        if (targetHighestRolePosition >= commandMemberHighestRolePosition) {
+        // Sprawdź, czy użytkownik do zbanowania ma wyższą/równą rangę niż bot
+        if (targetHighestRolePosition >= commandHighestRolePosition) {
             return interaction.editReply(
                 'Nie możesz wyrzucić użytkownika o wyższej lub równej roli.',
             )
         }
 
+        // Sprawdź, czy użytkownika da się wyrzucić
         if (!targetMember.kickable) {
             return interaction.editReply('Nie mogę wyrzucić tego użytkownika.')
         }
@@ -109,8 +110,8 @@ export default {
                 `Wyrzucono użytkownika ${targetMember.user.tag} z powodem: "${reason}"`,
             )
         } catch (error) {
-            interaction.reply(
-                'Nie można wyrzycić użytkownika! Wystąpił błąd podczas wykonywania tej komendy. Skontaktuj się z deweloperem bota.',
+            interaction.editReply(
+                'Nie można wyrzucić użytkownika! Wystąpił błąd podczas wykonywania tej komendy. Skontaktuj się z deweloperem bota.',
             )
         }
     },
