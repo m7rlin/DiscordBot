@@ -1,6 +1,6 @@
-import consola from 'consola'
 import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 import { COMMAND_BAN_BAN_ONLY_MEMBERS } from '../../config'
+import consola from 'consola'
 
 export default {
     cooldown: 0,
@@ -86,9 +86,9 @@ export default {
         if (interaction.user.id === interaction.guild.ownerId) {
             // console.log('Komenda uzyta przez wlasciciela serwera!')
             if (COMMAND_BAN_BAN_ONLY_MEMBERS) {
-                await this.banUser(interaction, targetUser, reason)
+                return this.banMember(interaction, targetMember, reason)
             } else {
-                await this.banMember(interaction, targetMember, reason)
+                return this.banUser(interaction, targetUser, reason)
             }
         }
 
@@ -106,9 +106,9 @@ export default {
 
         // Zbanuj użytkownika
         if (COMMAND_BAN_BAN_ONLY_MEMBERS) {
-            await this.banUser(interaction, targetUser, reason)
-        } else {
             await this.banMember(interaction, targetMember, reason)
+        } else {
+            await this.banUser(interaction, targetUser, reason)
         }
     },
 
