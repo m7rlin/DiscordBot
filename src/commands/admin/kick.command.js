@@ -23,42 +23,95 @@ export default {
         const reason =
             interaction.options.getString('reason') || 'Brak podanego powodu.'
 
-        // Sprawdź, czy próbuje zbanować samego siebie
+        await interaction.deferReply()
+
+        const commandMember = interaction.member
+        const botMember = interaction.guild.members.me
+        const targetMember = await interaction.guild.members
+            .fetch(targetUser.id)
+            .catch((error) => {
+                return null
+            })
+
+        if (targetMember == null) {
+            interaction.editReply('Użytkownik nie jest członkiem tej gildii!')
+            return
+        }
+
+        // Sprawdź, czy użytkownik próbuje wyrzucić samego siebie
         if (targetUser.id === commandUser.id) {
-            return interaction.reply('Nie możesz wyrzucić samego siebie.')
+            return interaction.editReply('Nie możesz wyrzucić samego siebie.')
         }
 
-        // Sprawdź, czy próbuje zbanować tego bota
+        // Sprawdź, czy użytkownik próbuje wyrzucić tego bota
         if (targetUser.id === interaction.client.user.id) {
-            return interaction.reply('Nie mogę wyrzucić samego siebie.')
+            return interaction.editReply('Nie mogę wyrzucić samego siebie.')
         }
 
-        // Sprawdź uprawnienia
-        if (!interaction.member.permissions.has('KICK_MEMBERS')) {
-            return interaction.reply(
+        // Sprawdź uprawnienia użytkownika
+        if (!commandMember.permissions.has(PermissionFlagsBits.KickMembers)) {
+            return interaction.editReply(
                 'Nie masz uprawnień do wyrzucenia użytkowników.',
             )
         }
 
-        const commandMember = interaction.guild.members.cache.get(
-            commandUser.id,
-        )
-        const memberToBan = targetUser.guild.members.cache.get(targetUser.id)
+        // Sprawdź uprawnienia bota
+        if (!botMember.permissions.has(PermissionFlagsBits.KickMembers)) {
+            return interaction.editReply(
+                'Bot nie ma uprawnień do wyrzucenia użytkowników.',
+            )
+        }
 
-        if (
-            commandMember.roles.highest.position <=
-            memberToBan.roles.highest.position
-        ) {
-            return interaction.reply(
+        const targetHighestRolePosition = targetMember.roles.highest.position
+        const commandMemberHighestRolePosition =
+            commandMember.roles.highest.position
+        const botHighestRolePosition =
+            interaction.guild.members.me.roles.highest.position
+
+        // console.log(
+        //     commandMemberHighestRolePosition,
+        //     targetHighestRolePosition,
+        //     botHighestRolePosition,
+        // )
+
+        if (targetHighestRolePosition >= botHighestRolePosition) {
+            return interaction.editReply(
+                'Nie mogę wyrzucić użytkownika o wyższej lub równej roli.',
+            )
+        }
+
+        // Właściciel serwera zawsze może wyrzucić użytkownika
+        if (interaction.user.id === interaction.guild.ownerId) {
+            console.log('Komenda uzyta przez wlasciciela serwera!')
+            // Wyrzuć użytkownika
+            return await this.kick(interaction, targetMember, reason)
+        }
+
+        if (targetHighestRolePosition >= commandMemberHighestRolePosition) {
+            return interaction.editReply(
                 'Nie możesz wyrzucić użytkownika o wyższej lub równej roli.',
             )
         }
 
-        // Wyrzuć użytkownika
-        await memberToBan.kick({ reason })
+        if (!targetMember.kickable) {
+            return interaction.editReply('Nie mogę wyrzucić tego użytkownika.')
+        }
 
-        await interaction.reply(
-            `Wyrzucono użytkownika ${targetUser.tag} z powodem: "${reason}"`,
-        )
+        // Wyrzuć użytkownika
+        await this.kick(interaction, targetMember, reason)
+    },
+
+    async kick(interaction, targetMember, reason) {
+        try {
+            await targetMember.kick({ reason })
+
+            await interaction.editReply(
+                `Wyrzucono użytkownika ${targetMember.user.tag} z powodem: "${reason}"`,
+            )
+        } catch (error) {
+            interaction.reply(
+                'Nie można wyrzycić użytkownika! Wystąpił błąd podczas wykonywania tej komendy. Skontaktuj się z deweloperem bota.',
+            )
+        }
     },
 }

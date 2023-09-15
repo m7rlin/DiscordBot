@@ -23,42 +23,95 @@ export default {
         const reason =
             interaction.options.getString('reason') || 'Brak podanego powodu.'
 
-        // Sprawdź, czy próbuje zbanować samego siebie
+        await interaction.deferReply()
+
+        const commandMember = interaction.member
+        const botMember = interaction.guild.members.me
+        const targetMember = await interaction.guild.members
+            .fetch(targetUser.id)
+            .catch((error) => {
+                return null
+            })
+
+        if (targetMember == null) {
+            interaction.editReply('Użytkownik nie jest członkiem tej gildii!')
+            return
+        }
+
+        // Sprawdź, czy użytkownik próbuje zbanować samego siebie
         if (targetUser.id === commandUser.id) {
-            return interaction.reply('Nie możesz zbanować samego siebie.')
+            return interaction.editReply('Nie możesz zbanować samego siebie.')
         }
 
-        // Sprawdź, czy próbuje zbanować tego bota
+        // Sprawdź, czy użytkownik próbuje zbanować tego bota
         if (targetUser.id === interaction.client.user.id) {
-            return interaction.reply('Nie mogę zbanować samego siebie.')
+            return interaction.editReply('Nie mogę zbanować samego siebie.')
         }
 
-        // Sprawdź uprawnienia
-        if (!interaction.member.permissions.has('BAN_MEMBERS')) {
-            return interaction.reply(
-                'Nie masz uprawnień do banowania użytkowników.',
+        // Sprawdź uprawnienia użytkownika
+        if (!commandMember.permissions.has(PermissionFlagsBits.KickMembers)) {
+            return interaction.editReply(
+                'Nie masz uprawnień do banowanie użytkowników.',
             )
         }
 
-        const commandMember = interaction.guild.members.cache.get(
-            commandUser.id,
-        )
-        const memberToBan = targetUser.guild.members.cache.get(targetUser.id)
+        // Sprawdź uprawnienia bota
+        if (!botMember.permissions.has(PermissionFlagsBits.KickMembers)) {
+            return interaction.editReply(
+                'Bot nie ma uprawnień do wyrzucenia użytkowników.',
+            )
+        }
 
-        if (
-            commandMember.roles.highest.position <=
-            memberToBan.roles.highest.position
-        ) {
-            return interaction.reply(
+        const targetHighestRolePosition = targetMember.roles.highest.position
+        const commandMemberHighestRolePosition =
+            commandMember.roles.highest.position
+        const botHighestRolePosition =
+            interaction.guild.members.me.roles.highest.position
+
+        // console.log(
+        //     commandMemberHighestRolePosition,
+        //     targetHighestRolePosition,
+        //     botHighestRolePosition,
+        // )
+
+        if (targetHighestRolePosition >= botHighestRolePosition) {
+            return interaction.editReply(
+                'Nie mogę zbanować użytkownika o wyższej lub równej roli.',
+            )
+        }
+
+        // Właściciel serwera zawsze może zbanować użytkownika
+        if (interaction.user.id === interaction.guild.ownerId) {
+            console.log('Komenda uzyta przez wlasciciela serwera!')
+            // Zbanuj użytkownika
+            return await this.kick(interaction, targetMember, reason)
+        }
+
+        if (targetHighestRolePosition >= commandMemberHighestRolePosition) {
+            return interaction.editReply(
                 'Nie możesz zbanować użytkownika o wyższej lub równej roli.',
             )
         }
 
-        // Zbanuj użytkownika
-        await memberToBan.ban({ reason })
+        if (!targetMember.bannable) {
+            return interaction.editReply('Nie mogę zbanować tego użytkownika.')
+        }
 
-        await interaction.reply(
-            `Zbanowano użytkownika ${targetUser.tag} z powodem: "${reason}"`,
-        )
+        // Zbanuj użytkownika
+        await this.ban(interaction, targetMember, reason)
+    },
+
+    async ban(interaction, targetMember, reason) {
+        try {
+            await targetMember.ban({ reason })
+
+            await interaction.editReply(
+                `Zbanowano użytkownika ${targetMember.user.tag} z powodem: "${reason}"`,
+            )
+        } catch (error) {
+            interaction.reply(
+                'Nie można zbanować użytkownika! Wystąpił błąd podczas wykonywania tej komendy. Skontaktuj się z deweloperem bota.',
+            )
+        }
     },
 }
