@@ -76,7 +76,7 @@ export default {
             await interaction.guild.bans.remove(targetUser.id)
 
             await interaction.editReply(
-                `Odbanowano użytkownika ${targetUser.tag} z powodem: "${reason}"`,
+                `Odbanowano użytkownika ${targetUser.tag} z powodu: "${reason}"`,
             )
         } catch (error) {
             consola.error(error)
