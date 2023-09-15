@@ -1,4 +1,6 @@
+import consola from 'consola'
 import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
+import { COMMAND_BAN_BAN_ONLY_MEMBERS } from '../../config'
 
 export default {
     cooldown: 0,
@@ -32,7 +34,7 @@ export default {
             .fetch(targetUser.id)
             .catch(() => null)
 
-        if (targetMember == null) {
+        if (COMMAND_BAN_BAN_ONLY_MEMBERS && targetMember == null) {
             return interaction.editReply(
                 'Użytkownik nie jest członkiem tej gildii!',
             )
@@ -62,7 +64,8 @@ export default {
             )
         }
 
-        const targetHighestRolePosition = targetMember.roles.highest.position
+        const targetHighestRolePosition =
+            targetMember?.roles?.highest?.position ?? -1
         const commandHighestRolePosition = commandMember.roles.highest.position
         const botHighestRolePosition = botMember.roles.highest.position
 
@@ -82,7 +85,11 @@ export default {
         // Właściciel serwera zawsze może wyrzucić użytkownika
         if (interaction.user.id === interaction.guild.ownerId) {
             // console.log('Komenda uzyta przez wlasciciela serwera!')
-            return this.ban(interaction, targetMember, reason)
+            if (COMMAND_BAN_BAN_ONLY_MEMBERS) {
+                await this.banUser(interaction, targetUser, reason)
+            } else {
+                await this.banMember(interaction, targetMember, reason)
+            }
         }
 
         // Sprawdź, czy użytkownik do zbanowania ma wyższą/równą rangę niż bot
@@ -93,15 +100,33 @@ export default {
         }
 
         // Sprawdź, czy użytkownika da się zbanowąć
-        if (!targetMember.bannable) {
+        if (!targetMember?.bannable) {
             return interaction.editReply('Nie mogę zbanować tego użytkownika!')
         }
 
         // Zbanuj użytkownika
-        await this.ban(interaction, targetMember, reason)
+        if (COMMAND_BAN_BAN_ONLY_MEMBERS) {
+            await this.banUser(interaction, targetUser, reason)
+        } else {
+            await this.banMember(interaction, targetMember, reason)
+        }
     },
 
-    async ban(interaction, targetMember, reason) {
+    async banUser(interaction, targetUser, reason) {
+        try {
+            await interaction.guild.members.ban(targetUser, { reason })
+
+            await interaction.editReply(
+                `Zbanowano użytkownika ${targetUser.tag} z powodem: "${reason}"`,
+            )
+        } catch (error) {
+            consola.error(error)
+            interaction.editReply(
+                'Nie można zbanować użytkownika! Wystąpił błąd podczas wykonywania tej komendy. Skontaktuj się z deweloperem bota.',
+            )
+        }
+    },
+    async banMember(interaction, targetMember, reason) {
         try {
             await targetMember.ban({ reason })
 
@@ -109,8 +134,9 @@ export default {
                 `Zbanowano użytkownika ${targetMember.user.tag} z powodem: "${reason}"`,
             )
         } catch (error) {
+            consola.error(error)
             interaction.editReply(
-                'Nie można zbanować użytkownika! Wystąpił błąd podczas wykonywania tej komendy. Skontaktuj się z deweloperem bota.',
+                'Nie można zbanować użytkownika gildii! Wystąpił błąd podczas wykonywania tej komendy. Skontaktuj się z deweloperem bota.',
             )
         }
     },
