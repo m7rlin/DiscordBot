@@ -5,7 +5,6 @@ export default {
     data: new SlashCommandBuilder()
         .setName('kick')
         .setDescription('Wyrzuca gracza z serwera.')
-        .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
         .addUserOption((option) =>
             option
                 .setName('user')
@@ -15,43 +14,39 @@ export default {
         .addStringOption((option) =>
             option.setName('reason').setDescription('Powód wyrzucenia'),
         )
+        .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
         .setDMPermission(false),
 
     async execute(interaction) {
+        // /kick <user> [reason]
         const targetUser = interaction.options.getUser('user')
         const reason =
-            interaction.options.getString('reason') || 'Brak podanego powodu.'
+            interaction.options.getString('reason') || 'Nie podano powodu'
 
         await interaction.deferReply()
 
         const commandMember = interaction.member
         const botMember = interaction.guild.members.me
-        const targetMember = await interaction.guild.members.cache.get(
-            targetUser.id,
-        )
+        const targetMember = interaction.guild.members.cache.get(targetUser.id)
 
-        // Sprawdź uprawnienia użytkownika
         if (!commandMember.permissions.has(PermissionFlagsBits.KickMembers)) {
             return interaction.editReply(
                 'Nie masz uprawnień do wyrzucenia użytkowników.',
             )
         }
 
-        // Sprawdź uprawnienia bota
         if (!botMember.permissions.has(PermissionFlagsBits.KickMembers)) {
             return interaction.editReply(
-                'Bot nie ma uprawnień do wyrzucenia użytkowników.',
+                'Nie mam uprawnień do wyrzucenia użytkowników.',
             )
         }
 
         const targetHighestRolePosition = targetMember.roles.highest.position
-        const commandMemberHighestRolePosition =
-            commandMember.roles.highest.position
-        const botHighestRolePosition =
-            interaction.guild.members.me.roles.highest.position
+        const commandHighestRolePosition = commandMember.roles.highest.position
+        const botHighestRolePosition = botMember.roles.highest.position
 
         // console.log(
-        //     commandMemberHighestRolePosition,
+        //     commandHighestRolePosition,
         //     targetHighestRolePosition,
         //     botHighestRolePosition,
         // )
@@ -62,15 +57,17 @@ export default {
             )
         }
 
-        if (targetHighestRolePosition >= commandMemberHighestRolePosition) {
+        if (targetHighestRolePosition >= commandHighestRolePosition) {
             return interaction.editReply(
                 'Nie możesz wyrzucić użytkownika o wyższej lub równej roli.',
             )
         }
 
         if (!targetMember.kickable) {
-            return interaction.editReply('Nie mogę wyrzucić tego użytkownika.')
+            return interaction.editReply('Nie mogę wyrzucić tego użytkownika!')
         }
+
+        // console.log(commandMember)
 
         try {
             await targetMember.kick({ reason })
@@ -79,7 +76,7 @@ export default {
                 `Wyrzucono użytkownika ${targetMember.user.tag} z powodem: "${reason}"`,
             )
         } catch (error) {
-            interaction.reply(
+            interaction.editReply(
                 'Nie można wyrzycić użytkownika! Wystąpił błąd podczas wykonywania tej komendy. Skontaktuj się z deweloperem bota.',
             )
         }
