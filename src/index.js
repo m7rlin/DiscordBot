@@ -31,7 +31,6 @@ await Promise.all([
     commandHandler.loadCommand('./commands/utils/info.command'),
     // Admin
     commandHandler.loadCommand('./commands/admin/ban.command'),
-    commandHandler.loadCommand('./commands/admin/unban.command'),
     commandHandler.loadCommand('./commands/admin/kick.command'),
 ])
 
