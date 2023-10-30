@@ -33,6 +33,7 @@ await Promise.all([
     commandHandler.loadCommand('./commands/admin/ban.command'),
     commandHandler.loadCommand('./commands/admin/unban.command'),
     commandHandler.loadCommand('./commands/admin/kick.command'),
+    commandHandler.loadCommand('./commands/admin/purge.command'),
 ])
 
 commandHandler.displayLoadedCommands()
