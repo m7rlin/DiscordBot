@@ -1,4 +1,4 @@
-## Odcinek 16
+## Odcinek 19
 
-Temat:
-YouTube:
+Temat: Komenda unban
+YouTube: https://youtu.be/Ruv_z24veTw
