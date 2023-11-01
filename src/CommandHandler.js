@@ -124,9 +124,46 @@ class CommandHandler {
         }
     }
 
-    async registerGuildCommands() {
+    async registerGuildCommands(guildID) {
+        if (!guildID || typeof guildID !== 'string') {
+            consola.error(
+                new Error("Missing 'guildID' on 'registerGuildCommands'"),
+            )
+            process.exit(1)
+        }
+
         // Construct and prepare an instance of the REST module
-        const rest = new REST().setToken(TOKEN)
+        const rest = this._createRESTClient()
+
+        const commands = []
+
+        for (const command of this.client.commands.values()) {
+            commands.push(command.data.toJSON())
+        }
+
+        try {
+            consola.info(
+                `Started refreshing ${commands.length} guild(${guildID}) (/) commands.`,
+            )
+
+            // The put method is used to fully refresh all commands in the guild with the current set
+            const data = await rest.put(
+                Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
+                { body: commands },
+            )
+
+            consola.info(
+                `Successfully reloaded ${data.length} guild(${guildID}) (/) commands.`,
+            )
+        } catch (error) {
+            // And of course, make sure you catch and log any errors!
+            consola.error(error)
+        }
+    }
+
+    async registerGlobalCommands() {
+        // Construct and prepare an instance of the REST module
+        const rest = this._createRESTClient()
 
         const commands = []
 
@@ -140,17 +177,16 @@ class CommandHandler {
             )
 
             // The put method is used to fully refresh all commands in the guild with the current set
-            const data = await rest.put(
-                Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
-                { body: commands },
-            )
+            const data = await rest.put(Routes.applicationCommands(CLIENT_ID), {
+                body: commands,
+            })
 
             consola.info(
                 `Successfully reloaded ${data.length} application (/) commands.`,
             )
         } catch (error) {
             // And of course, make sure you catch and log any errors!
-            console.error(error)
+            consola.error(error)
         }
     }
 
@@ -167,6 +203,102 @@ class CommandHandler {
         }
 
         console.log(table.toString())
+    }
+
+    async unregisterGuildCommand(guildID, commandID) {
+        if (!guildID || typeof guildID !== 'string') {
+            consola.error(
+                new Error("Missing 'guildID' on 'registerGuildCommands'"),
+            )
+            process.exit(1)
+        }
+
+        if (!commandID || typeof commandID !== 'string') {
+            consola.error(
+                new Error("Missing 'commandID' on 'registerGuildCommands'"),
+            )
+            process.exit(1)
+        }
+
+        const rest = this._createRESTClient()
+
+        try {
+            await rest.delete(
+                Routes.applicationGuildCommand(CLIENT_ID, guildID, commandID),
+            )
+
+            consola.success(
+                `Successfully deleted guild (/) command ID(${commandID}).`,
+            )
+        } catch (error) {
+            // And of course, make sure you catch and log any errors!
+            consola.error(error)
+        }
+    }
+
+    async unregisterGlobalCommand(commandID) {
+        if (!commandID || typeof commandID !== 'string') {
+            consola.error(
+                new Error("Missing 'commandID' on 'registerGuildCommands'"),
+            )
+            process.exit(1)
+        }
+
+        const rest = this._createRESTClient()
+
+        try {
+            await rest.delete(Routes.applicationCommand(CLIENT_ID, commandID))
+
+            consola.success(
+                `Successfully deleted application (/) command ID(${commandID}).`,
+            )
+        } catch (error) {
+            // And of course, make sure you catch and log any errors!
+            consola.error(error)
+        }
+    }
+
+    async unregisterAllGuildCommands(guildID) {
+        if (!guildID || typeof guildID !== 'string') {
+            consola.error(
+                new Error("Missing 'guildID' on 'registerGuildCommands'"),
+            )
+            process.exit(1)
+        }
+
+        const rest = this._createRESTClient()
+
+        try {
+            await rest.put(
+                Routes.applicationGuildCommands(CLIENT_ID, guildID),
+                { body: [] },
+            )
+
+            consola.success(
+                `Successfully deleted all guild(${guildID}) (/) commands.`,
+            )
+        } catch (error) {
+            // And of course, make sure you catch and log any errors!
+            consola.error(error)
+        }
+    }
+    async unregisterAllGlobalCommands() {
+        const rest = this._createRESTClient()
+
+        try {
+            await rest.put(Routes.applicationCommands(CLIENT_ID), { body: [] })
+
+            consola.success(
+                'Successfully deleted all application (/) commands.',
+            )
+        } catch (error) {
+            // And of course, make sure you catch and log any errors!
+            consola.error(error)
+        }
+    }
+
+    _createRESTClient(newToken) {
+        return new REST().setToken(newToken ?? TOKEN)
     }
 }
 

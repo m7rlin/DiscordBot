@@ -1,6 +1,7 @@
 import { Events } from 'discord.js'
 import chalk from 'chalk'
 import { consola } from 'consola'
+import { GUILD_ID } from '../config'
 
 export default {
     name: Events.ClientReady,
@@ -11,6 +12,12 @@ export default {
         )
 
         // Register commands
-        client.commandHandler.registerGuildCommands()
+        client.commandHandler.registerGuildCommands(GUILD_ID)
+
+        // Remove ping command
+        // client.commandHandler.unregisterGuildCommand(
+        //     GUILD_ID,
+        //     '1169332148763893860',
+        // )
     },
 }
