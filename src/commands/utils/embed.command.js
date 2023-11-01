@@ -1,0 +1,52 @@
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
+
+export default {
+    cooldown: 5,
+    data: new SlashCommandBuilder()
+        .setName('embed')
+        .setDescription('Wyświetla testowy embed.'),
+
+    async execute(interaction) {
+        const bot = interaction.client.user
+        const { user } = interaction
+
+        const botEmbed = {
+            color: 0x9a28fb,
+            title: 'Tytuł',
+            thumbnail: {
+                url: bot.displayAvatarURL(),
+            },
+            fields: [
+                {
+                    name: 'Nazwa użytkownika',
+                    value: bot.username,
+                    inline: true,
+                },
+                {
+                    name: 'Bot ID',
+                    value: bot.id,
+                    inline: true,
+                },
+            ],
+        }
+
+        const fields = [
+            {
+                name: 'Nazwa użytkownika',
+                value: user.username,
+            },
+            {
+                name: 'ID użytkownika',
+                value: user.id,
+            },
+        ]
+
+        const userEmbed = new EmbedBuilder()
+            .setTitle(`Informacje o użytkowniku ${user.tag}`)
+            .setColor(0x9a28fb)
+            .setThumbnail(user.displayAvatarURL())
+            .addFields(fields)
+
+        interaction.reply({ embeds: [botEmbed, userEmbed] })
+    },
+}

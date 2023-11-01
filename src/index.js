@@ -29,11 +29,14 @@ await Promise.all([
     // Utils
     commandHandler.loadCommand('./commands/utils/ping.command'),
     commandHandler.loadCommand('./commands/utils/info.command'),
+    commandHandler.loadCommand('./commands/utils/embed.command'),
     // Admin
     commandHandler.loadCommand('./commands/admin/ban.command'),
     commandHandler.loadCommand('./commands/admin/unban.command'),
     commandHandler.loadCommand('./commands/admin/kick.command'),
     commandHandler.loadCommand('./commands/admin/purge.command'),
+    // Games
+    commandHandler.loadCommand('./commands/games/coin-flip.command'),
 ])
 
 commandHandler.displayLoadedCommands()
