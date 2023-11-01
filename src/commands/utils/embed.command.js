@@ -46,6 +46,13 @@ export default {
             .setColor(0x9a28fb)
             .setThumbnail(user.displayAvatarURL())
             .addFields(fields)
+            .setTimestamp(Date.now())
+            .setImage('https://i.ytimg.com/vi/JrQkgLLL9XQ/sddefault.jpg')
+            .setFooter({
+                text: 'Footer text',
+                iconURL: 'https://i.ytimg.com/vi/JrQkgLLL9XQ/sddefault.jpg',
+            })
+            .setURL('https://www.youtube.com/@m7rlin/join')
 
         interaction.reply({ embeds: [botEmbed, userEmbed] })
     },
