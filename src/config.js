@@ -6,6 +6,13 @@ export const CLIENT_ID = process.env.CLIENT_ID
 export const GUILD_ID = process.env.GUILD_ID
 export const BOT_INVITE_LINK = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&scope=bot+applications.commands&permissions=8`
 
+// BOT STATUS
+export const BOT_STATUS_ENABLED = Boolean(process.env.BOT_STATUS_ENABLED)
+// (seconds) shoudn't be less then 10 seconds
+// 0 = disabled
+export const BOT_STATUS_INTERVAL =
+    parseInt(process.env.BOT_STATUS_INTERVAL) || 0
+
 // COMMANDS CONFIG
 export const DEFAULT_COMMAND_COOLDOWN =
     process.env.DEFAULT_COMMAND_COOLDOWN || 3
