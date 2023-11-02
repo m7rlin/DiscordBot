@@ -62,5 +62,10 @@ export default {
         )
 
         interaction.editReply({ embeds: [embed] })
+
+        // Set a timeout to delete the interaction after 10 seconds
+        setTimeout(() => {
+            interaction.deleteReply()
+        }, 10 * 1000)
     },
 }
