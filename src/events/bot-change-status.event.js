@@ -36,7 +36,11 @@ export default {
     name: Events.ClientReady,
     once: true,
     async execute(client) {
-        if (!BOT_STATUS_ENABLED) return
+        if (!BOT_STATUS_ENABLED) {
+            // Clear status
+            client.user.setPresence({ activity: null })
+            return
+        }
 
         if (BOT_STATUS_INTERVAL > 0) {
             if (BOT_STATUS_INTERVAL < 10) {
