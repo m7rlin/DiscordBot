@@ -13,14 +13,7 @@ export default {
         .setDescription('Wyświetla informacje pomocnicze o komendach.')
         .addIntegerOption((option) =>
             option.setName('page').setDescription('Strona'),
-        )
-        .addStringOption((option) =>
-            option
-                .setName('command')
-                .setDescription('Nazwa komendy')
-                .setAutocomplete(true),
         ),
-
     async execute(interaction) {
         // /help <page>
         // /help <command>
