@@ -7,7 +7,8 @@ export const GUILD_ID = process.env.GUILD_ID
 export const BOT_INVITE_LINK = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&scope=bot+applications.commands&permissions=8`
 
 // BOT STATUS
-export const BOT_STATUS_ENABLED = Boolean(process.env.BOT_STATUS_ENABLED)
+export const BOT_STATUS_ENABLED =
+    process.env.BOT_STATUS_ENABLED === 'true' || false
 // (seconds) shoudn't be less then 10 seconds
 // 0 = disabled
 export const BOT_STATUS_INTERVAL =
@@ -19,6 +20,8 @@ export const DEFAULT_COMMAND_COOLDOWN =
 
 // COMMANDS
 export const COMMAND_BAN_BAN_ONLY_MEMBERS = false
+export const COMMAND_HELP_COMMANDS_PER_PAGE =
+    parseInt(process.env.COMMAND_HELP_COMMANDS_PER_PAGE) || 3
 
 // EMBED
 export const EMBED_FOOTER_TEXT = '© m7rlin | Poradniki dla Ciebie'

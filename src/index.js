@@ -30,6 +30,7 @@ await Promise.all([
     commandHandler.loadCommand('./commands/utils/ping.command'),
     commandHandler.loadCommand('./commands/utils/info.command'),
     commandHandler.loadCommand('./commands/utils/embed.command'),
+    commandHandler.loadCommand('./commands/utils/help.command'),
     // Admin
     commandHandler.loadCommand('./commands/admin/ban.command'),
     commandHandler.loadCommand('./commands/admin/unban.command'),
