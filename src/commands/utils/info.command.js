@@ -1,11 +1,19 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
+import packageJson from '../../../package.json' assert { type: 'json' }
+import {
+    BOT_INVITE_LINK,
+    COLORS,
+    EMBED_FOOTER_TEXT,
+    FORMAT_DATE,
+} from '../../config'
+import dayjs from '../../dayjsSetup'
 
 export default {
     cooldown: 0,
     data: new SlashCommandBuilder()
         .setName('info')
         .setDescription(
-            'Wyświetla informacje o serwerze, użytkowniku albo bocie.',
+            'Wyświetla informacje o deweloperze, wersji, linki pomocnicze i inne...',
         )
         .addSubcommand((subcommand) =>
             subcommand
@@ -28,94 +36,144 @@ export default {
         // /info user [user]
         // /info server
         // /info bot
+
+        await interaction.deferReply()
+
+        const { client } = interaction
+
         const subcommand = interaction.options.getSubcommand()
-        console.log(subcommand)
+        // console.log(subcommand)
 
         if (subcommand === 'bot') {
-            const bot = interaction.client.user
-
-            console.log(bot)
-
-            const botEmbed = {
-                color: 0x9a28fb,
-                title: 'Informacje o bocie',
-                thumbnail: {
-                    url: bot.displayAvatarURL(),
-                },
-                fields: [
+            const embed = new EmbedBuilder()
+                .setTitle('Informacje')
+                .setColor(COLORS.PRIMARY)
+                .setThumbnail(client.user.displayAvatarURL())
+                .setFooter({
+                    // iconURL: client.user.displayAvatarURL(),
+                    text: EMBED_FOOTER_TEXT,
+                })
+                .addFields([
                     {
-                        name: 'Nazwa użytkownika',
-                        value: bot.username,
+                        name: 'Wersja',
+                        value: `${packageJson.version}`,
                         inline: true,
                     },
                     {
-                        name: 'Bot ID',
-                        value: bot.id,
+                        name: 'Mów mi',
+                        value: 'Misio',
                         inline: true,
                     },
-                ],
-            }
+                    {
+                        name: 'Developer',
+                        value: `${packageJson.author}\n• [stawowczyk.me](https://stawowczyk.me)`,
+                        inline: false,
+                    },
+                    {
+                        name: 'Linki',
+                        value:
+                            // '• [Premium](https://dc.magictm.com/premium)\n' +
+                            // '• [Pomoc](https://dc.magictm.com/blog)\n' +
+                            `• [Zaproś mnie na serwer](${BOT_INVITE_LINK})`,
+                        // '• [Żądanie funkcji / Zgłoszenie błędu](https://dc.magictm.com/feedback)',
+                        inline: true,
+                    },
+                ])
 
-            interaction.reply({ embeds: [botEmbed] })
+            interaction.editReply({ embeds: [embed] })
         } else if (subcommand === 'server') {
             const server = interaction.guild
+            const displayOwner = true
 
-            const serverEmbed = {
-                color: 0x9a28fb,
-                title: `Informacje o serwerze ${server.name}`,
-                fields: [
+            if (!server.available) {
+                return await this.guildNotAvailable(interaction)
+            }
+
+            const memberCount = server.members.cache.filter(
+                (member) => !member.user.bot,
+            ).size
+            const botCount = server.members.cache.filter(
+                (member) => member.user.bot,
+            ).size
+
+            // console.log(memberCount, botCount)
+
+            const embed = new EmbedBuilder()
+                .setTitle(`Informacje o serwerze ${server.name}`)
+                .setColor(COLORS.PRIMARY)
+                .setThumbnail(server.iconURL())
+                .setFooter({
+                    // iconURL: client.user.displayAvatarURL(),
+                    text: EMBED_FOOTER_TEXT,
+                })
+                .addFields([
                     {
                         name: 'ID serwera',
                         value: server.id,
                     },
                     {
-                        name: 'Ilość użytkowników',
-                        value: server.memberCount,
+                        name: 'Członkowie',
+                        value: memberCount.toString(),
+                        inline: true,
                     },
-                ],
+                    {
+                        name: 'Boty',
+                        value: botCount.toString(),
+                        inline: true,
+                    },
+                    // {
+                    //     name: 'Członkowie (boty)',
+                    //     value: `${memberCount.toString()} (${botCount.toString()})`,
+                    //     inline: true,
+                    // },
+                ])
+
+            if (displayOwner) {
+                const owner = await server.fetchOwner()
+                embed.addFields({
+                    name: 'Właściciel',
+                    value: `${owner.user.displayName} (ID: ${owner.id})`,
+                })
             }
 
-            interaction.reply({ embeds: [serverEmbed] })
+            interaction.editReply({ embeds: [embed] })
         } else if (subcommand === 'user') {
             const user =
                 interaction.options.getUser('target') || interaction.user
 
-            const fields = [
-                {
-                    name: 'Nazwa użytkownika',
-                    value: user.username,
-                },
-                {
-                    name: 'ID użytkownika',
-                    value: user.id,
-                },
-            ]
-
-            const userEmbed = new EmbedBuilder()
-                .setTitle(`Informacje o użytkowniku ${user.tag}`)
-                .setColor(0x9a28fb)
-                .setThumbnail(user.displayAvatarURL())
-                .addFields(fields)
-
-            const userEmbed2 = {
-                color: 0x9a28fb,
-                title: `Informacje o użytkowniku ${user.tag}`,
-                thumbnail: {
-                    url: user.displayAvatarURL(),
-                },
-                fields: [
-                    {
-                        name: 'Nazwa użytkownika',
-                        value: user.username,
-                    },
-                    {
-                        name: 'ID użytkownika',
-                        value: user.id,
-                    },
-                ],
+            const server = interaction.guild
+            if (!server.available) {
+                return await this.guildNotAvailable(interaction)
             }
 
-            interaction.reply({ embeds: [userEmbed] })
+            const member = server.members.cache.get(interaction.user.id)
+
+            const embed = new EmbedBuilder()
+                .setTitle(`Informacje o użytkowniku ${user.tag}`)
+                .setColor(COLORS.PRIMARY)
+                .setThumbnail(user.displayAvatarURL())
+                .setFooter({
+                    // iconURL: client.user.displayAvatarURL(),
+                    text: EMBED_FOOTER_TEXT,
+                })
+                .addFields([
+                    {
+                        name: 'Nazwa użytkownika (ID)',
+                        value: `${user.username} (${user.id})`,
+                    },
+                    {
+                        name: 'Członek od',
+                        value: `${dayjs(member.joinedTimestamp).format(
+                            FORMAT_DATE,
+                        )}`,
+                    },
+                ])
+
+            interaction.editReply({ embeds: [embed] })
         }
+    },
+
+    async guildNotAvailable(interaction) {
+        return await interaction.editReply('Gilia jest niedostępna.')
     },
 }

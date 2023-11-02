@@ -26,14 +26,18 @@ consola.box(`Author:  ${packageJson.author}\nVersion: ${packageJson.version}`)
 
 // Register commands
 await Promise.all([
+    // Utils
     commandHandler.loadCommand('./commands/utils/ping.command'),
-    commandHandler.loadCommand('./commands/utils/echo.command'),
-    commandHandler.loadCommand('./commands/utils/meme.command'),
-    commandHandler.loadCommand('./commands/utils/weather.command'),
-    commandHandler.loadCommand('./commands/utils/poradnik.command'),
-    commandHandler.loadCommand('./commands/fun/cat.command'),
     commandHandler.loadCommand('./commands/utils/info.command'),
-    commandHandler.loadCommand('./commands/music/music.command'),
+    commandHandler.loadCommand('./commands/utils/embed.command'),
+    commandHandler.loadCommand('./commands/utils/help.command'),
+    // Admin
+    commandHandler.loadCommand('./commands/admin/ban.command'),
+    commandHandler.loadCommand('./commands/admin/unban.command'),
+    commandHandler.loadCommand('./commands/admin/kick.command'),
+    commandHandler.loadCommand('./commands/admin/purge.command'),
+    // Games
+    commandHandler.loadCommand('./commands/games/coin-flip.command'),
 ])
 
 commandHandler.displayLoadedCommands()
