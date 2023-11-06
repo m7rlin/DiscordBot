@@ -1,34 +1,36 @@
-import { consola } from 'consola'
+import consola from 'consola'
 import { ActivityType, Events } from 'discord.js'
-import { BOT_STATUS_ENABLED, BOT_STATUS_INTERVAL } from '../config'
+import {
+    BOT_STATUS_ENABLED,
+    BOT_STATUS_INTERVAL,
+    USER_PRESENCE_STATUS,
+} from '../config'
 
 const activities = [
     {
-        type: ActivityType.Custom,
-        name: 'customstatus',
-        state: 'Subskrybuj m7rlin | Poradniki dla Ciebie',
-    },
-
-    {
-        type: ActivityType.Playing,
-        name: 'Minecraft',
-        state: 'W grze od 10 minut.',
-    },
-    {
-        type: ActivityType.Competing,
-        name: 'Minecraft',
-        state: 'W grze od 10 minut.',
-    },
-    {
+        name: 'Magiczna Kraina',
         type: ActivityType.Streaming,
-        name: 'MagicTM Live',
-        state: 'Na żywo od 10 minut.',
-        url: 'https://www.magictm.com',
+        state: 'Start serwera mc.mgtm.pl!',
+        status: USER_PRESENCE_STATUS.ONLINE,
+        url: 'https://youtube.com/?watch=dgkalsdjfksl',
     },
     {
-        type: ActivityType.Watching,
-        name: 'YT @m7rlin',
-        state: 'Ogląda wspaniałe poradniki @m7rlin na YouTube.',
+        name: 'customstatus',
+        type: ActivityType.Custom,
+        state: 'Subskrybuj m7rlin | Poradniki dla Ciebie',
+        status: USER_PRESENCE_STATUS.ONLINE,
+    },
+    {
+        name: 'Minecraft',
+        type: ActivityType.Playing,
+        state: 'W grze od 10 minut.',
+        status: USER_PRESENCE_STATUS.DND,
+    },
+    {
+        name: 'CS 2',
+        type: ActivityType.Competing,
+        state: 'Zaraz m7rlin pokona krisa.',
+        status: USER_PRESENCE_STATUS.IDLE,
     },
 ]
 
@@ -36,6 +38,17 @@ export default {
     name: Events.ClientReady,
     once: true,
     async execute(client) {
+        // "online" "idle" "invisible" "dnd"
+        // const status = await client.user.setStatus('online')
+
+        // const status = await client.user.setActivity({
+        //     name: 'Minecraft',
+        //     type: ActivityType.Playing,
+        //     state: 'Zostało mi pół serduszka',
+        // })
+
+        // console.log('status', status)
+
         if (!BOT_STATUS_ENABLED) {
             // Clear status
             client.user.setPresence({ activity: null })
@@ -51,51 +64,31 @@ export default {
             return this.initRefreshing(client)
         }
 
-        const status = await client.user.setActivity({
-            type: ActivityType.Custom,
-            name: 'customstatus',
-            state: 'Subskrybuj m7rlin | Poradniki dla Ciebie',
+        // Set activity index = 0
+        this.setPresence(client, 0)
+
+        consola.success('Status bota pomyślnie zmieniony.')
+    },
+
+    setPresence(client, i) {
+        const myActivity = activities[i]
+
+        const status = myActivity.status ?? 'online'
+
+        const activity = {
+            name: myActivity.name,
+            type: myActivity.type,
+            state: myActivity.state,
+        }
+
+        if (myActivity.type === ActivityType.Streaming) {
+            activity.url = myActivity.url
+        }
+
+        client.user.setPresence({
+            activities: [activity],
+            status,
         })
-        // Change bot status
-        await client.user.setStatus('online')
-
-        // const status = await client.user.setPresence({
-        //     activities: [
-        //         // {
-        //         //     type: ActivityType.Custom,
-        //         //     name: 'customstatus',
-        //         //     state: 'Subskrybuj m7rlin | Poradniki dla Ciebie',
-        //         // },
-
-        //         // {
-        //         //     type: ActivityType.Playing,
-        //         //     name: 'Minecraft',
-        //         //     state: 'W grze od 10 minut.',
-        //         // },
-        //         // {
-        //         //     type: ActivityType.Competing,
-        //         //     name: 'Minecraft',
-        //         //     state: 'W grze od 10 minut.',
-        //         // },
-        //         // {
-        //         //     type: ActivityType.Streaming,
-        //         //     name: 'MagicTM Live',
-        //         //     state: 'Na żywo od 10 minut.',
-        //         //     url: 'https://www.magictm.com',
-        //         // },
-        //         {
-        //             type: ActivityType.Watching,
-        //             name: 'YT @m7rlin',
-        //             state: 'Ogląda wspaniałe poradniki @m7rlin na YouTube.',
-        //         },
-        //     ],
-        //     // “idle”, “dnd”, “online”, or “offline”
-        //     status: 'online',
-        // })
-
-        // console.log('status', status)
-
-        consola.success('Status bota zmieniony pomyślnie.')
     },
 
     async initRefreshing(client) {
@@ -106,26 +99,12 @@ export default {
         let i = 0
 
         setInterval(() => {
+            const activityCount = activities.length
+
             // Reset activities
-            if (i >= activities.length) i = 0
+            if (i >= activityCount) i = 0
 
-            const myActivity = activities[i]
-
-            const activity = {
-                type: myActivity.type,
-                name: myActivity.name,
-                state: myActivity.state,
-            }
-
-            if (myActivity.type === ActivityType.Streaming) {
-                activity.url = myActivity.url
-            }
-
-            client.user.setPresence({
-                activities: [activity],
-
-                status: 'online',
-            })
+            this.setPresence(client, i)
 
             i++
         }, BOT_STATUS_INTERVAL * 1000)
