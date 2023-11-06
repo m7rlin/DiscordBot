@@ -13,7 +13,7 @@ export default {
     data: new SlashCommandBuilder()
         .setName('info')
         .setDescription(
-            'Wyświetla informacje o deweloperze, wersji, linki pomocnicze i inne...',
+            'Wyświetla informacje o serwerze, użytkowniku albo bocie.',
         )
         .addSubcommand((subcommand) =>
             subcommand
@@ -36,23 +36,23 @@ export default {
         // /info user [user]
         // /info server
         // /info bot
-
         await interaction.deferReply()
 
         const { client } = interaction
 
         const subcommand = interaction.options.getSubcommand()
+        const displayOwner = true
         // console.log(subcommand)
 
         if (subcommand === 'bot') {
+            const bot = client.user
+
+            // console.log(bot)
+
             const embed = new EmbedBuilder()
-                .setTitle('Informacje')
-                .setColor(COLORS.PRIMARY)
-                .setThumbnail(client.user.displayAvatarURL())
-                .setFooter({
-                    // iconURL: client.user.displayAvatarURL(),
-                    text: EMBED_FOOTER_TEXT,
-                })
+                .setTitle('Informacje o bocie')
+                .setColor(COLORS.INFO)
+                .setThumbnail(bot.displayAvatarURL())
                 .addFields([
                     {
                         name: 'Wersja',
@@ -66,7 +66,7 @@ export default {
                     },
                     {
                         name: 'Developer',
-                        value: `${packageJson.author}\n• [stawowczyk.me](https://stawowczyk.me)`,
+                        value: `${packageJson.author}\n • [stawowczyk.me](https://stawowczyk.me)`,
                         inline: false,
                     },
                     {
@@ -79,33 +79,37 @@ export default {
                         inline: true,
                     },
                 ])
+                .setFooter({
+                    text: EMBED_FOOTER_TEXT,
+                })
 
             interaction.editReply({ embeds: [embed] })
         } else if (subcommand === 'server') {
-            const server = interaction.guild
-            const displayOwner = true
+            if (!interaction.inGuild()) {
+                await interaction.editReply(
+                    'To polecenie możesz użyć tylko w gildii!',
+                )
+                return
+            }
 
+            const server = interaction.guild
             if (!server.available) {
-                return await this.guildNotAvailable(interaction)
+                await interaction.editReply('Gilia niedostępna!')
+                return
             }
 
             const memberCount = server.members.cache.filter(
                 (member) => !member.user.bot,
             ).size
+
             const botCount = server.members.cache.filter(
                 (member) => member.user.bot,
             ).size
 
-            // console.log(memberCount, botCount)
-
             const embed = new EmbedBuilder()
                 .setTitle(`Informacje o serwerze ${server.name}`)
-                .setColor(COLORS.PRIMARY)
+                .setColor(COLORS.INFO)
                 .setThumbnail(server.iconURL())
-                .setFooter({
-                    // iconURL: client.user.displayAvatarURL(),
-                    text: EMBED_FOOTER_TEXT,
-                })
                 .addFields([
                     {
                         name: 'ID serwera',
@@ -127,53 +131,71 @@ export default {
                     //     inline: true,
                     // },
                 ])
+                .setFooter({
+                    text: EMBED_FOOTER_TEXT,
+                })
 
             if (displayOwner) {
                 const owner = await server.fetchOwner()
-                embed.addFields({
-                    name: 'Właściciel',
-                    value: `${owner.user.displayName} (ID: ${owner.id})`,
-                })
+                embed.addFields([
+                    {
+                        name: 'Właściciel',
+                        value: `${owner.user.displayName} (ID: ${owner.id})`,
+                    },
+                ])
             }
 
             interaction.editReply({ embeds: [embed] })
         } else if (subcommand === 'user') {
+            if (!interaction.inGuild()) {
+                await interaction.editReply(
+                    'To polecenie możesz użyć tylko w gildii!',
+                )
+                return
+            }
+
             const user =
                 interaction.options.getUser('target') || interaction.user
 
             const server = interaction.guild
             if (!server.available) {
-                return await this.guildNotAvailable(interaction)
+                await interaction.editReply('Gilia niedostępna!')
+                return
             }
 
-            const member = server.members.cache.get(interaction.user.id)
+            const member = server.members.cache.get(user.id)
+
+            if (!member) {
+                await interaction.editReply(
+                    'Ten użytkownik nie jest członkiem tej gildii!',
+                )
+                return
+            }
+
+            const fields = [
+                {
+                    name: 'Nazwa użytkownika (ID)',
+                    value: `${user.username} (${user.id})`,
+                },
+
+                {
+                    name: 'Członek od',
+                    value: `${dayjs(member.joinedTimestamp).format(
+                        FORMAT_DATE,
+                    )} (${dayjs(member.joinedTimestamp).fromNow()})`,
+                },
+            ]
 
             const embed = new EmbedBuilder()
                 .setTitle(`Informacje o użytkowniku ${user.tag}`)
-                .setColor(COLORS.PRIMARY)
+                .setColor(COLORS.INFO)
                 .setThumbnail(user.displayAvatarURL())
+                .addFields(fields)
                 .setFooter({
-                    // iconURL: client.user.displayAvatarURL(),
                     text: EMBED_FOOTER_TEXT,
                 })
-                .addFields([
-                    {
-                        name: 'Nazwa użytkownika (ID)',
-                        value: `${user.username} (${user.id})`,
-                    },
-                    {
-                        name: 'Członek od',
-                        value: `${dayjs(member.joinedTimestamp).format(
-                            FORMAT_DATE,
-                        )}`,
-                    },
-                ])
 
             interaction.editReply({ embeds: [embed] })
         }
-    },
-
-    async guildNotAvailable(interaction) {
-        return await interaction.editReply('Gilia jest niedostępna.')
     },
 }
