@@ -9,7 +9,7 @@ export const BOT_INVITE_LINK = `https://discord.com/oauth2/authorize?client_id=$
 // BOT STATUS
 export const BOT_STATUS_ENABLED =
     process.env.BOT_STATUS_ENABLED === 'true' || false
-// (seconds) shoudn't be less then 10 seconds
+// (seconds) shound't be less then 10 seconds
 // 0 = disabled
 export const BOT_STATUS_INTERVAL =
     parseInt(process.env.BOT_STATUS_INTERVAL) || 0
@@ -44,3 +44,11 @@ export const COLORS = {
 // DATE TIME
 export const FORMAT_DATE = 'D MMMM YYYY'
 export const FORMAT_DATETIME = 'D MMMM YYYY hh:mm:ss'
+
+// USER PRESENCE STATUS
+export const USER_PRESENCE_STATUS = {
+    ONLINE: 'online',
+    IDLE: 'idle',
+    INVISIBLE: 'invisible',
+    DND: 'dnd',
+}
