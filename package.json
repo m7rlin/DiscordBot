@@ -1,12 +1,12 @@
 {
     "name": "discordbot",
-    "version": "2.16.0",
+    "version": "2.27.0-docker",
     "description": "A tutorial series for beginners on how to create a Discord bot using NodeJS and Discord.JS library.",
     "main": "src/index.js",
     "scripts": {
         "dev": "node --es-module-specifier-resolution=node src/index.js",
         "dev:watch": "nodemon --es-module-specifier-resolution=node src/index.js",
-        "start": "node src/index.js"
+        "start": "node --es-module-specifier-resolution=node src/index.js"
     },
     "dependencies": {
         "ascii-table3": "^0.8.2",
